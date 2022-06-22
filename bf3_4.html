@@ -6,7 +6,6 @@
   <title>FFS Alert System 3.4</title>
   <script>
     function openTab(evt, tabName) {
-      // Declare all variables
       var i, tabcontent, tablinks;
 
       // Get all elements with class="tabcontent" and hide them
@@ -21,7 +20,7 @@
         tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
 
-      // Show the current tab, and add an "active" class to the button that opened the tab
+      // Show current tab, and add an "active" class to the button that opened the tab
       document.getElementById(tabName).style.display = "block";
       evt.currentTarget.className += " active";
     }
