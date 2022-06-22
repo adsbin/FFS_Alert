@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FFS Alert System 3.4</title>
+  <title>FFS Alert System 3.5</title>
   <script>
     function openTab(evt, tabName) {
-      var i, tabcontent, tablinks;
-      
+      let i, tabcontent, tablinks;
+
       // Get all elements with class="tabcontent" and hide them
       tabcontent = document.getElementsByClassName("tabcontent");
       for (i = 0; i < tabcontent.length; i++) {
@@ -161,7 +161,7 @@
           rel="noopener" target="_blank"><span class="blue-text">BNBUSD Chart</span></a> by TradingView</div>
       <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
       <script type="text/javascript">
-        var studies = [
+        let studies = [
           {
             id: "MASimple@tv-basicstudies",
             inputs: {
@@ -275,7 +275,7 @@
     }
 
     function format(date, format) {
-      var d = toDate(date);
+      let d = toDate(date);
       return format
         .replace(/Y/gm, d.getFullYear().toString())
         .replace(/m/gm, ('0' + (d.getMonth() + 1)).substr(-2))
@@ -286,11 +286,11 @@
         .replace(/v/gm, ('0000' + (d.getMilliseconds() % 1000)).substr(-3));
     }
     //#endregion
-    var stddev_limit, q_len, vlimit, resetAlertSec;
-    var priceQueue = [], qtyQueue = [];
-    var count_warn = 0, curStdDev = 0, curMean = 0, curVol = 0, devIndex = 0, qtyIndex = 0;
-    var lastWarnTime = Date.now();
-    var socket_live;
+    let stddev_limit, q_len, vlimit, resetAlertSec;
+    let priceQueue = [], qtyQueue = [];
+    let count_warn = 0, curStdDev = 0, curMean = 0, curVol = 0, devIndex = 0, qtyIndex = 0;
+    let lastWarnTime = Date.now();
+    let socket_live;
 
     const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
     const Symbol = document.getElementById("symbol");
@@ -346,7 +346,7 @@
       vlimit = document.getElementById("qty_limit").value;
       resetAlertSec = document.getElementById("resetAlertSec").value;
       socket_live = new WebSocket('wss://stream.binance.com:9443/ws/bnbusdt@trade');
-      var json_error;
+
       socket_live.onopen = function (evt) {
         //alert("SocketOpen");
       }
@@ -361,9 +361,9 @@
 
     function handle_trades(json_message) {
       //alert("In handle_trades:" + JSON.stringify(json_message));
-      var formatted_dateTime = format(json_message['E'], FullDateTime);
-      var curPrice = Math.trunc(json_message['p'] * 100) / 100;
-      var curQty = Math.trunc(json_message['q'] * 1000) / 1000;      
+      let formatted_dateTime = format(json_message['E'], FullDateTime);
+      let curPrice = Math.trunc(json_message['p'] * 100) / 100;
+      let curQty = Math.trunc(json_message['q'] * 1000) / 1000;      
 
       cal_stddev_mean(curPrice, curQty);
       let curDiff = (curPrice - curMean)*100;
@@ -405,8 +405,8 @@
 
     function volAlert(curPrice) {
       if (curVol >= vlimit) {
-        var curTime = Date.now();
-        var formatted_dateTime = format(curTime, ShortTime);
+        let curTime = Date.now();
+        let formatted_dateTime = format(curTime, ShortTime);
         vLog.innerHTML = "<i>vol: " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + vLog.innerHTML;
         k(200, 33, 10);
       }
@@ -414,16 +414,16 @@
 
     function qtyAlert(curPrice, curQty) {
       if (curQty >= vlimit) {
-        var curTime = Date.now();
-        var formatted_dateTime = format(curTime, ShortTime);
+        let curTime = Date.now();
+        let formatted_dateTime = format(curTime, ShortTime);
         vLog.innerHTML = ++qtyIndex + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + vLog.innerHTML;
         k(200, 33, 10);
       }
     }
 
     function qtyReset() {
-      var curTime = Date.now();
-      var formatted_dateTime = format(curTime, ShortTime);
+      let curTime = Date.now();
+      let formatted_dateTime = format(curTime, ShortTime);
       vLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime;
       qtyIndex = 0;
     }
@@ -444,9 +444,9 @@
     }
 
     function StdDevAlert() {
-      var curTime = Date.now();
-      var formatted_dateTime = format(curTime, ShortTime);
-      var secDiff = (curTime - lastWarnTime) / 1000;
+      let curTime = Date.now();
+      let formatted_dateTime = format(curTime, ShortTime);
+      let secDiff = (curTime - lastWarnTime) / 1000;
 
       if (secDiff > resetAlertSec && count_warn != 0) {
         count_warn = 0;
