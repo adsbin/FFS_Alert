@@ -5,22 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FFS Alert System 3.5</title>
     <script>
+        const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
+        const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
+        const fontPriceMulti = 5;
+
         function openTab(evt, tabName) {
             let i, tabcontent, tablinks;
 
-            // Get all elements with class="tabcontent" and hide them
             tabcontent = document.getElementsByClassName("tabcontent");
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
             }
 
-            // Get all elements with class="tablinks" and remove the class "active"
             tablinks = document.getElementsByClassName("tablinks");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
 
-            // Show current tab, and add an "active" class to the button that opened the tab
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
@@ -221,8 +222,6 @@
         <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
     </div>
     <script>
-        //file:///home/ubuntu2110/PythonWorkSpace/binanceFeed.html
-
         //#region Util
         let a = new AudioContext()
         function k(w, x, y) {
@@ -292,7 +291,6 @@
         let lastWarnTime = Date.now();
         let socket_live;
 
-        const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const Symbol = document.getElementById("symbol");
         const Price = document.getElementById("price");
         const Qty = document.getElementById("qty");
@@ -319,6 +317,15 @@
             return await response.json();
         }
 
+        function get24HighLow() {
+            getAnyAPI(geckoapistr).then(
+                data => {
+                    UpperP.value = data[0].high_24h;
+                    LowerP.value = data[0].low_24h;
+                }
+            );
+        }
+
         function showhideChart() {
             if (btn_c.innerHTML == "Show Chart") {
                 candleChart.style.display = "inline-block";
@@ -331,21 +338,12 @@
             }
         }
 
-        function get24HighLow() {
-            getAnyAPI(geckoapistr).then(
-                data => {
-                    UpperP.value = data[0].high_24h;
-                    LowerP.value = data[0].low_24h;
-                }
-            );
-        }
-
         function ws_trades() {
             q_len = document.getElementById("ssize").value;
             stddev_limit = document.getElementById("stddev_limit").value;
             vlimit = document.getElementById("qty_limit").value;
             resetAlertSec = document.getElementById("resetAlertSec").value;
-            socket_live = new WebSocket('wss://stream.binance.com:9443/ws/bnbusdt@trade');
+            socket_live = new WebSocket(binanceWSS);
 
             socket_live.onopen = function (evt) {
                 //alert("SocketOpen");
@@ -373,7 +371,7 @@
             //Change Price font size by deviation
             Price.style.fontSize = function () {
                 if (curMean != 0)
-                    return (Math.trunc((1 + curDiff / curMean) * 100) / 100).toString() + "em";
+                    return (Math.trunc((1 + curDiff * fontPriceMulti / curMean) * 100) / 100).toString() + "em";
                 else
                     return "1em";
             }();
@@ -405,19 +403,19 @@
 
         function volAlert(curPrice) {
             if (curVol >= vlimit) {
+                k(200, 33, 10);
                 let curTime = Date.now();
                 let formatted_dateTime = format(curTime, ShortTime);
                 vLog.innerHTML = "<i>vol: " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + vLog.innerHTML;
-                k(200, 33, 10);
             }
         }
 
         function qtyAlert(curPrice, curQty) {
             if (curQty >= vlimit) {
+                k(200, 33, 10);
                 let curTime = Date.now();
                 let formatted_dateTime = format(curTime, ShortTime);
                 vLog.innerHTML = ++qtyIndex + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + vLog.innerHTML;
-                k(200, 33, 10);
             }
         }
 
@@ -449,13 +447,11 @@
             }
 
             if (curStdDev >= stddev_limit) {
+                snd.play();
                 lastWarnTime = curTime;
                 P_Alert.innerHTML = "Alert: ";
                 Warn_count.innerHTML = ++count_warn;
-                snd.play();
-
                 sdLog.innerHTML = ++devIndex + ": " + curMean + "; " + curStdDev + "; " + Math.min.apply(null, priceQueue) + "," + Math.max.apply(null, priceQueue) + "; " + curVol + "; " + formatted_dateTime + "<br />" + sdLog.innerHTML;
-                //sdLog.scrollTop = sdLog.scrollHeight;      
             }
         }
     </script>
