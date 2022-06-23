@@ -1,0 +1,460 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FFS Alert System 3.6</title>
+    <script>
+        const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
+        const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
+        const fontPriceMulti = 5;
+
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+
+        input[type=text] {
+            background-color: black;
+            color: white;
+        }
+
+        /* Style the tab */
+        .tab {
+
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            float: left;
+            outline: none;
+            cursor: pointer;
+            padding: 0px 0px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 0px 0px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="provision">
+        <table>
+            <tr style="font-size: 10px">
+                <td>Sample size:</td>
+                <td><input id="ssize" type="text" size="1" value="60" /></td>
+                <td>StdDev alert:</td>
+                <td><input id="stddev_limit" type="text" size="1" value="0.15" /></td>
+                <td>Qty alert:</td>
+                <td><input id="qty_limit" type="text" size="1" value="600" /></td>
+                <td>Reset alert(s):</td>
+                <td><input id="resetAlertSec" type="text" size="1" value="30" /></td>
+            </tr>
+        </table>
+    </div>
+    <table>
+        <tr style="font-size: 9px">
+            <td>SYMBOL:</td>
+            <td>
+                <div id="symbol"></div>
+            </td>
+            <td>QTY:</td>
+            <td>
+                <div id="qty"></div>
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 9px">PRICE:</td>
+            <td>
+                <div id="price" style="font-size:20px; color:yellow;"></div>
+            </td>
+            <td>Vol:</td>
+            <td>
+                <div id="sampleQty"></div>
+            </td>
+        </tr>
+        <tr style="font-size: 12px">
+            <td>TIMESTAMP:</td>
+            <td>
+                <div id="timestamp"></div>
+            </td>
+            <td colspan="2">
+                <button id="btnGetHL" onclick="get24HighLow();" style="font-family: monospace;">Get High/Low</button>
+            </td>
+        </tr>
+        <tr>
+            <td>StdDev:</td>
+            <td>
+                <div id="stddev"></div>
+            </td>
+            <td style="font-family: monospace;">UpperLimit</td>
+            <td><input id="upperPrice" type="text" value="" style="width: 42px;" /></td>
+        </tr>
+        <tr>
+            <td>Mean:</td>
+            <td>
+                <div id="mean"></div>
+            </td>
+            <td style="font-family: monospace;">LowerLimit</td>
+            <td><input id="lowerPrice" type="text" value="" style="width: 42px;" /></td>
+        </tr>
+        <tr>
+            <td>
+                <div id="PriceAlert" style="background-color: yellow; color:black;"></div>
+            </td>
+            <td>
+                <div id="warnCount" style="background-color: yellow; color:black;"></div>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td><button onclick="ws_trades();provision.style.display='none';">Start</button></td>
+            <td><button onclick="socket_live.close();provision.style.display='block';">Stop</button></td>
+            <td><button onclick="qtyReset();">Cls VolLog</button>
+            </td>
+            <td><button id="btn_showhidechart" onclick="showhideChart();">Hide Chart</button></td>
+        </tr>
+    </table>
+    <div id="chart" style="height:240px; overflow:auto; resize:both;">
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+            <div id="tradingview_e4a42"></div>
+            <div style="font-size:x-small;"><a href="https://www.tradingview.com/symbols/BNBUSD/?exchange=BINANCE"
+                    rel="noopener" target="_blank"><span class="blue-text">BNBUSD Chart</span></a> by TradingView</div>
+            <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+            <script type="text/javascript">
+                let studies = [
+                    {
+                        id: "MASimple@tv-basicstudies",
+                        inputs: {
+                            length: 350
+                        }
+                    },
+                    {
+                        id: "MASimple@tv-basicstudies",
+                        inputs: {
+                            length: 125
+                        }
+                    },
+                    {
+                        id: "MASimple@tv-basicstudies",
+                        inputs: {
+                            length: 25
+                        }
+                    },
+                ];
+
+                new TradingView.widget(
+                    {
+                        "autosize": true,
+                        "symbol": "BINANCE:BNBUSD",
+                        "interval": "1",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "en",
+                        "toolbar_bg": "#f1f3f6",
+                        "range": "1D",
+                        "enable_publishing": false,
+                        "hide_top_toolbar": true,
+                        "hide_legend": true,
+                        "save_image": false,
+                        "hidevolume": true,
+                        "studies": studies,
+                        "container_id": "tradingview_e4a42"
+                    }
+                );
+            </script>
+        </div>
+        <!-- TradingView Widget END -->
+    </div>
+
+    <!-- Tab content -->
+    <div id="DeviationLog" class="tabcontent" style="display:block;">
+        <div id="stdDevLog" style="height:220px;font-size:14px;overflow-y:scroll;">Index: Mean; StdDev;
+            minPrice,maxPrice; Vol; DateTime</div>
+    </div>
+    <div id="VolumeLog" class="tabcontent">
+        <div id="volLog" style="height:220px;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime
+        </div>
+    </div>
+    <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
+        <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
+    </div>
+    <script>
+        //#region Util        
+        function k(w, x, y) {
+            let a = new AudioContext();
+            //console.log("Gain:"+w, "Hz:"+x, "ms:"+y)
+            v = a.createOscillator();
+            u = a.createGain();
+            v.connect(u);
+            v.frequency.value = x;
+            v.type = "square";
+            u.connect(a.destination);
+            u.gain.value = w * 0.01;
+            v.start(a.currentTime);
+            v.stop(a.currentTime + y * 0.001);
+        }
+        const snd = new Audio("data:audio/wav;base64,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qJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=");
+
+        function standardDeviation(arr) {
+            let mean = arr.reduce((acc, curr) => {
+                return acc + curr
+            }, 0) / arr.length;
+
+            arr = arr.map((el) => {
+                return (el - mean) ** 2
+            })
+
+            let total = arr.reduce((acc, curr) => acc + curr, 0);
+
+            return Math.sqrt(total / arr.length)
+        }
+
+        function meanF(arr) {
+            return arr.reduce((acc, curr) => {
+                return acc + curr
+            }, 0) / arr.length;
+        }
+
+        function toDate(date) {
+            if (date === void 0) {
+                return new Date(0);
+            }
+            if (isDate(date)) {
+                return date;
+            } else {
+                return new Date(parseFloat(date.toString()));
+            }
+        }
+
+        function isDate(date) {
+            return (date instanceof Date);
+        }
+
+        function format(date, format) {
+            let d = toDate(date);
+            return format
+                .replace(/Y/gm, d.getFullYear().toString())
+                .replace(/m/gm, ('0' + (d.getMonth() + 1)).substr(-2))
+                .replace(/d/gm, ('0' + (d.getDate() + 0)).substr(-2))
+                .replace(/H/gm, ('0' + (d.getHours() + 0)).substr(-2))
+                .replace(/i/gm, ('0' + (d.getMinutes() + 0)).substr(-2))
+                .replace(/s/gm, ('0' + (d.getSeconds() + 0)).substr(-2))
+                .replace(/v/gm, ('0000' + (d.getMilliseconds() % 1000)).substr(-3));
+        }
+        //#endregion
+        let stddev_limit, q_len, vlimit, resetAlertSec;
+        let priceQueue = [], qtyQueue = [];
+        let count_warn = 0, curStdDev = 0, curMean = 0, curVol = 0, devIndex = 0, qtyIndex = 0;
+        let lastWarnTime = Date.now();
+        let socket_live;
+
+        const Symbol = document.getElementById("symbol");
+        const Price = document.getElementById("price");
+        const Qty = document.getElementById("qty");
+        const TStamp = document.getElementById("timestamp");
+        const StdDev = document.getElementById("stddev");
+        const Mean = document.getElementById("mean");
+        const SampleQty = document.getElementById("sampleQty");
+        const P_Alert = document.getElementById("PriceAlert");
+        const Warn_count = document.getElementById("warnCount");
+        const UpperP = document.getElementById("upperPrice");
+        const LowerP = document.getElementById("lowerPrice");
+        const candleChart = document.getElementById("chart");
+        const provision = document.getElementById("provision");
+
+        const FullDateTime = "Y-m-d H:i:s.v";
+        const ShortTime = "H:i:s.v";
+
+        const btn_c = document.getElementById("btn_showhidechart");
+        const sdLog = document.getElementById("stdDevLog");
+        const vLog = document.getElementById("volLog");
+
+        async function getAnyAPI(apiURL) {
+            let response = await fetch(apiURL);
+            return await response.json();
+        }
+
+        function get24HighLow() {
+            getAnyAPI(geckoapistr).then(
+                data => {
+                    UpperP.value = data[0].high_24h;
+                    LowerP.value = data[0].low_24h;
+                }
+            );
+        }
+
+        function showhideChart() {
+            if (btn_c.innerHTML == "Show Chart") {
+                candleChart.style.display = "inline-block";
+                candleChart.style.width = parent.innerWidth - 10;
+                btn_c.innerHTML = "Hide Chart";
+            }
+            else {
+                candleChart.style.display = "none";
+                btn_c.innerHTML = "Show Chart";
+            }
+        }
+
+        function ws_trades() {
+            q_len = document.getElementById("ssize").value;
+            stddev_limit = document.getElementById("stddev_limit").value;
+            vlimit = document.getElementById("qty_limit").value;
+            resetAlertSec = document.getElementById("resetAlertSec").value;
+            socket_live = new WebSocket(binanceWSS);
+
+            socket_live.onopen = function (evt) {
+                //alert("SocketOpen");
+            }
+            socket_live.onmessage = function (event) {
+                //alert(JSON.stringify(event.data));
+                handle_trades(JSON.parse(event.data));
+            }
+            socket_live.onerror = function (evt) {
+                alert("SocketError");
+            }
+        }
+
+        function handle_trades(json_message) {
+            //alert("In handle_trades:" + JSON.stringify(json_message));
+            let formatted_dateTime = format(json_message['E'], FullDateTime);
+            let curPrice = Math.trunc(json_message['p'] * 100) / 100;
+            let curQty = Math.trunc(json_message['q'] * 1000) / 1000;
+
+            cal_stddev_mean(curPrice, curQty);
+            let curDiff = (curPrice - curMean) * 100;
+
+            Symbol.innerHTML = json_message['s'];
+            Price.innerHTML = curPrice + " : " + Math.trunc(curDiff) / 100;
+            //Change Price font size by deviation
+            Price.style.fontSize = function () {
+                if (curMean != 0)
+                    return (Math.trunc((1 + curDiff * fontPriceMulti / curMean) * 100) / 100).toString() + "em";
+                else
+                    return "1em";
+            }();
+            Qty.innerHTML = curQty;
+            TStamp.innerHTML = formatted_dateTime;
+            StdDev.innerHTML = priceQueue.length + 1 + "/ " + curStdDev;
+            Mean.innerHTML = curMean;
+            SampleQty.innerHTML = curVol;
+            StdDevAlert();
+            priceAlert(curPrice);
+            qtyAlert(curPrice, curQty);
+            volAlert(curPrice);
+        }
+
+        function cal_stddev_mean(curPrice, curQty) {
+            priceQueue.push(curPrice);
+            qtyQueue.push(curQty);
+            if (priceQueue.length >= q_len) {
+                curStdDev = Math.trunc(standardDeviation(priceQueue) * 100) / 100;
+                curMean = Math.trunc(meanF(priceQueue) * 100) / 100;
+                priceQueue.shift();
+
+                //Calculate sample volume
+                const reducer = (accumulator, curr) => accumulator + curr;
+                curVol = Math.trunc(qtyQueue.reduce(reducer));
+                qtyQueue.shift();
+            }
+        }
+
+        function volAlert(curPrice) {
+            if (curVol >= vlimit) {
+                k(200, 33, 10);
+                let curTime = Date.now();
+                let formatted_dateTime = format(curTime, ShortTime);
+                vLog.innerHTML = "<i>vol: " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + vLog.innerHTML;
+            }
+        }
+
+        function qtyAlert(curPrice, curQty) {
+            if (curQty >= vlimit) {
+                k(200, 33, 10);
+                let curTime = Date.now();
+                let formatted_dateTime = format(curTime, ShortTime);
+                vLog.innerHTML = ++qtyIndex + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + vLog.innerHTML;
+            }
+        }
+
+        function qtyReset() {
+            let curTime = Date.now();
+            let formatted_dateTime = format(curTime, ShortTime);
+            vLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime;
+            qtyIndex = 0;
+        }
+
+        function priceAlert(cPrice) {
+            if (UpperP.value != "")
+                UpperP.style.backgroundColor = (cPrice >= UpperP.value) ? "rgb(115, 255, 0)" : "initial";
+            if (LowerP.value != "")
+                LowerP.style.backgroundColor = (cPrice <= LowerP.value) ? "rgb(250, 150, 150)" : "initial";
+        }
+
+        function StdDevAlert() {
+            let curTime = Date.now();
+            let formatted_dateTime = format(curTime, ShortTime);
+            let secDiff = (curTime - lastWarnTime) / 1000;
+
+            if (secDiff > resetAlertSec && count_warn != 0) {
+                count_warn = 0;
+                devIndex = 0;
+                P_Alert.innerHTML = "";
+                Warn_count.innerHTML = "";
+                sdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime;
+            }
+
+            if (curStdDev >= stddev_limit) {
+                snd.play();
+                lastWarnTime = curTime;
+                P_Alert.innerHTML = "Alert: ";
+                Warn_count.innerHTML = ++count_warn;
+                sdLog.innerHTML = ++devIndex + ": " + curMean + "; " + curStdDev + "; " + Math.min.apply(null, priceQueue) + "," + Math.max.apply(null, priceQueue) + "; " + curVol + "; " + formatted_dateTime + "<br />" + sdLog.innerHTML;
+            }
+        }
+    </script>
+</body>
+
+</html>
