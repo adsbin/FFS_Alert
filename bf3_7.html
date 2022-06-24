@@ -74,9 +74,9 @@
                 <td>Sample size:</td>
                 <td><input id="ssize" type="text" size="1" value="60" /></td>
                 <td>StdDev alert:</td>
-                <td><input id="stddev_limit" type="text" size="1" value="0.15" /></td>
+                <td><input id="stddev_limit" type="text" size="1" value="0.12" /></td>
                 <td>Qty alert:</td>
-                <td><input id="qty_limit" type="text" size="1" value="600" /></td>
+                <td><input id="qty_limit" type="text" size="1" value="500" /></td>
                 <td>Reset alert(s):</td>
                 <td><input id="resetAlertSec" type="text" size="1" value="30" /></td>
             </tr>
@@ -381,7 +381,8 @@
                 curStdDev = Math.trunc(standardDeviation(priceQueue) * 100) / 100;
                 curMean = Math.trunc(meanF(priceQueue) * 100) / 100;
                 priceQueue.shift();
-
+            }
+            if (qtyQueue.length >= q_len) {
                 //Calculate sample volume
                 const reducer = (accumulator, curr) => accumulator + curr;
                 curVol = Math.trunc(qtyQueue.reduce(reducer));
@@ -395,6 +396,8 @@
                 let curTime = Date.now();
                 let formatted_dateTime = format(curTime, ShortTime);
                 vLog.innerHTML = "<i>vol: " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + vLog.innerHTML;
+                qtyQueue.length = 0;
+                curVol = 0;
             }
         }
 
