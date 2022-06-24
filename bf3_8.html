@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FFS Alert System 3.7</title>
+    <title>FFS Alert System 3.8</title>
     <script>
         const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
@@ -78,7 +78,7 @@
                 <td>Qty alert:</td>
                 <td><input id="qty_limit" type="text" size="1" value="500" /></td>
                 <td>Reset alert(s):</td>
-                <td><input id="resetAlertSec" type="text" size="1" value="30" /></td>
+                <td><input id="resetAlertSec" type="text" size="1" value="60" /></td>
             </tr>
         </table>
     </div>
@@ -413,7 +413,8 @@
         function qtyReset() {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            vLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + " QtyAlert: " + qtyIndex;
+            vLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; QtyAlert: " + qtyIndex;
+            //console.log("Last reset: " + formatted_dateTime + "; QtyAlert: " + qtyIndex);
             qtyIndex = 0;
         }
 
@@ -432,7 +433,8 @@
             if (secDiff > resetAlertSec && count_warn != 0) {
                 P_Alert.innerHTML = "";
                 Warn_count.innerHTML = "";
-                sdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + " Alert: " + count_warn;
+                sdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + "; Dev Alert: " + count_warn;
+                console.log("Last reset: " + formatted_dateTime + "; Dev Alert: " + count_warn);
                 count_warn = 0;
                 devIndex = 0;
             }
