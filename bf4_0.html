@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FFS Alert System 3.8</title>
+    <title>FFS Alert System 4.0</title>
     <script>
         const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
@@ -396,6 +396,7 @@
                 let curTime = Date.now();
                 let formatted_dateTime = format(curTime, ShortTime);
                 vLog.innerHTML = "<i>vol: " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + vLog.innerHTML;
+                //Trial clear qtyQueue
                 qtyQueue.length = 0;
                 curVol = 0;
             }
@@ -435,8 +436,7 @@
                 Warn_count.innerHTML = "";
                 sdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + "; Dev Alert: " + count_warn;
                 console.log("Last reset: " + formatted_dateTime + "; Dev Alert: " + count_warn);
-                count_warn = 0;
-                devIndex = 0;
+                count_warn = 0; devIndex = 0;
             }
 
             if (curStdDev >= stddev_limit) {
@@ -445,6 +445,9 @@
                 P_Alert.innerHTML = "Alert: ";
                 Warn_count.innerHTML = ++count_warn;
                 sdLog.innerHTML = ++devIndex + ": " + curMean + "; " + curStdDev + "; " + Math.min.apply(null, priceQueue) + "," + Math.max.apply(null, priceQueue) + "; " + curVol + "; " + formatted_dateTime + "<br />" + sdLog.innerHTML;
+                //Trial clear priceQueue
+                priceQueue.length = 0;
+                curMean = 0; curStdDev = 0;
             }
         }
     </script>
