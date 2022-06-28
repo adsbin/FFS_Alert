@@ -155,9 +155,9 @@
         </tr>
         <tr>
             <td><button
-                    onclick="ws_trades();wrapTradingView(); provision.style.display='none'; setLocStorage();">Start</button>
+                    onclick="ws_trades();wrapTradingView(); Provision.style.display='none'; setLocStorage();">Start</button>
             </td>
-            <td><button onclick="socket_live.close();provision.style.display='block';">Stop</button></td>
+            <td><button onclick="socket_live.close();Provision.style.display='block';">Stop</button></td>
             <td></td>
             <td><button id="btn_showhidechart" onclick="showhideChart();">Hide Chart</button></td>
         </tr>
@@ -294,7 +294,7 @@
         let socket_live;
 
         const Q_len = document.getElementById("ssize");
-        const Dev_limit =document.getElementById("stddev_limit");
+        const Dev_limit = document.getElementById("stddev_limit");
         const Qty_alert = document.getElementById("qty_limit");
         const Reset_sec = document.getElementById("resetAlertSec");
         const Symbol = document.getElementById("symbol");
@@ -310,15 +310,15 @@
         const V_count = document.getElementById("volumeCount");
         const UpperP = document.getElementById("upperPrice");
         const LowerP = document.getElementById("lowerPrice");
-        const candleChart = document.getElementById("chart");
-        const provision = document.getElementById("provision");
+        const CandleChart = document.getElementById("chart");
+        const Provision = document.getElementById("provision");
 
         const FullDateTime = "Y-m-d H:i:s.v";
         const ShortTime = "H:i:s.v";
 
-        const btn_c = document.getElementById("btn_showhidechart");
-        const sdLog = document.getElementById("stdDevLog");
-        const vLog = document.getElementById("volLog");
+        const Btn_c = document.getElementById("btn_showhidechart");
+        const SdLog = document.getElementById("stdDevLog");
+        const VLog = document.getElementById("volLog");
 
         async function getAnyAPI(apiURL) {
             let response = await fetch(apiURL);
@@ -342,14 +342,14 @@
         }
 
         function showhideChart() {
-            if (btn_c.innerHTML == "Show Chart") {
-                candleChart.style.display = "inline-block";
-                candleChart.style.width = parent.innerWidth - 10;
-                btn_c.innerHTML = "Hide Chart";
+            if (Btn_c.innerHTML == "Show Chart") {
+                CandleChart.style.display = "inline-block";
+                CandleChart.style.width = parent.innerWidth - 10;
+                Btn_c.innerHTML = "Hide Chart";
             }
             else {
-                candleChart.style.display = "none";
-                btn_c.innerHTML = "Show Chart";
+                CandleChart.style.display = "none";
+                Btn_c.innerHTML = "Show Chart";
             }
         }
 
@@ -422,18 +422,20 @@
             let formatted_dateTime = format(curTime, ShortTime);
             let secDiff = (curTime - v_lastWarnTime) / 1000;
 
-            if (secDiff > resetAlertSec && v_count_warn != 0) {
-                V_Alert.innerHTML = "";
-                V_count.innerHTML = "";
-                vLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime;
-                console.log("Vol last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn);
-                v_count_warn = 0;
+            if (resetAlertSec != 0) {
+                if (secDiff > resetAlertSec && v_count_warn != 0) {
+                    V_Alert.innerHTML = "";
+                    V_count.innerHTML = "";
+                    VLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime;
+                    console.log("Vol last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn);
+                    v_count_warn = 0;
+                }
             }
 
             if (curVol >= vlimit) {
                 k(200, 33, 10);
                 v_lastWarnTime = curTime;
-                vLog.innerHTML = "<i>" + ++v_count_warn + ": " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + vLog.innerHTML;
+                VLog.innerHTML = "<i>" + ++v_count_warn + ": " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + VLog.innerHTML;
                 V_Alert.innerHTML = "V. Alert: ";
                 V_count.innerHTML = v_count_warn;
                 //Trial clear qtyQueue
@@ -447,18 +449,20 @@
             let formatted_dateTime = format(curTime, ShortTime);
             let secDiff = (curTime - w_lastWarnTime) / 1000;
 
-            if (secDiff > resetAlertSec && w_count_warn != 0) {
-                V_Alert.innerHTML = "";
-                V_count.innerHTML = "";
-                vLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime;
-                console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
-                w_count_warn = 0;
+            if (resetAlertSec != 0) {
+                if (secDiff > resetAlertSec && w_count_warn != 0) {
+                    V_Alert.innerHTML = "";
+                    V_count.innerHTML = "";
+                    VLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime;
+                    console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
+                    w_count_warn = 0;
+                }
             }
 
             if (curQty >= vlimit) {
                 k(200, 33, 10);
                 w_lastWarnTime = curTime;
-                vLog.innerHTML = ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + vLog.innerHTML;
+                VLog.innerHTML = ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + VLog.innerHTML;
                 V_Alert.innerHTML = "Whale: ";
                 V_count.innerHTML = w_count_warn;
             }
@@ -476,12 +480,14 @@
             let formatted_dateTime = format(curTime, ShortTime);
             let secDiff = (curTime - p_lastWarnTime) / 1000;
 
-            if (secDiff > resetAlertSec && p_count_warn != 0) {
-                P_Alert.innerHTML = "";
-                P_count.innerHTML = "";
-                sdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + "; Dev Alert: " + p_count_warn;
-                console.log("Dev last reset: " + formatted_dateTime + "; P. Alert: " + p_count_warn);
-                p_count_warn = 0;
+            if (resetAlertSec != 0) {
+                if (secDiff > resetAlertSec && p_count_warn != 0) {
+                    P_Alert.innerHTML = "";
+                    P_count.innerHTML = "";
+                    SdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + "; Dev Alert: " + p_count_warn;
+                    console.log("Dev last reset: " + formatted_dateTime + "; P. Alert: " + p_count_warn);
+                    p_count_warn = 0;
+                }
             }
 
             if (curStdDev >= stddev_limit) {
@@ -489,7 +495,7 @@
                 p_lastWarnTime = curTime;
                 P_Alert.innerHTML = "P. Alert: ";
                 P_count.innerHTML = ++p_count_warn;
-                sdLog.innerHTML = p_count_warn + ": " + curMean + "; " + curStdDev + "; " + Math.min.apply(null, priceQueue) + "," + Math.max.apply(null, priceQueue) + "; " + curVol + "; " + formatted_dateTime + "<br />" + sdLog.innerHTML;
+                SdLog.innerHTML = p_count_warn + ": " + curMean + "; " + curStdDev + "; " + Math.min.apply(null, priceQueue) + "," + Math.max.apply(null, priceQueue) + "; " + curVol + "; " + formatted_dateTime + "<br />" + SdLog.innerHTML;
                 //Trial clear priceQueue
                 priceQueue.length = 0;
                 curMean = 0; curStdDev = 0;
