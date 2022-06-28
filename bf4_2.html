@@ -3,11 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FFS Alert System 4.1</title>
+    <title>FFS Alert System 4.2</title>
     <script>
         const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
         const fontPriceMulti = 5;
+
+        function getLocStorage() {
+            // console.log("Q_len:" + localStorage.getItem("Q_len"));
+            // console.log("Dev_limit:" + localStorage.getItem("Dev_limit"));
+            // console.log("Qty_alert:" + localStorage.getItem("Qty_alert"));
+            // console.log("Reset_sec:" + localStorage.getItem("Reset_sec"));
+            Q_len.value = (localStorage.getItem("Q_len") != null) ? localStorage.getItem("Q_len") : 60;
+            Dev_limit.value = (localStorage.getItem("Dev_limit") != null) ? localStorage.getItem("Dev_limit") : 0.12;
+            Qty_alert.value = (localStorage.getItem("Qty_alert") != null) ? localStorage.getItem("Qty_alert") : 500;
+            Reset_sec.value = (localStorage.getItem("Reset_sec") != null) ? localStorage.getItem("Reset_sec") : 90;
+        }
 
         function openTab(evt, tabName) {
             let i, tabcontent, tablinks;
@@ -67,18 +78,18 @@
     </style>
 </head>
 
-<body>
+<body onload="getLocStorage()">
     <div id="provision">
         <table>
             <tr style="font-size: 10px">
                 <td>Sample size:</td>
-                <td><input id="ssize" type="text" size="1" value="60" /></td>
+                <td><input id="ssize" type="text" size="1" /></td>
                 <td>StdDev alert:</td>
-                <td><input id="stddev_limit" type="text" size="1" value="0.12" /></td>
+                <td><input id="stddev_limit" type="text" size="1" /></td>
                 <td>Qty alert:</td>
-                <td><input id="qty_limit" type="text" size="1" value="500" /></td>
+                <td><input id="qty_limit" type="text" size="1" /></td>
                 <td>Reset alert(s):</td>
-                <td><input id="resetAlertSec" type="text" size="1" value="90" /></td>
+                <td><input id="resetAlertSec" type="text" size="1" /></td>
             </tr>
         </table>
     </div>
@@ -143,7 +154,9 @@
             </td>
         </tr>
         <tr>
-            <td><button onclick="ws_trades();wrapTradingView(); provision.style.display='none';">Start</button></td>
+            <td><button
+                    onclick="ws_trades();wrapTradingView(); provision.style.display='none'; setLocStorage();">Start</button>
+            </td>
             <td><button onclick="socket_live.close();provision.style.display='block';">Stop</button></td>
             <td></td>
             <td><button id="btn_showhidechart" onclick="showhideChart();">Hide Chart</button></td>
@@ -184,7 +197,7 @@
                             "autosize": true,
                             "symbol": "BINANCE:BNBUSD",
                             "interval": "1",
-                            "timezone": "Etc/UTC",
+                            "timezone": "Asia/Hong_Kong",
                             "theme": "dark",
                             "style": "1",
                             "locale": "en",
@@ -280,6 +293,10 @@
         let p_lastWarnTime = Date.now(), v_lastWarnTime = Date.now(), w_lastWarnTime = Date.now();
         let socket_live;
 
+        const Q_len = document.getElementById("ssize");
+        const Dev_limit =document.getElementById("stddev_limit");
+        const Qty_alert = document.getElementById("qty_limit");
+        const Reset_sec = document.getElementById("resetAlertSec");
         const Symbol = document.getElementById("symbol");
         const Price = document.getElementById("price");
         const Qty = document.getElementById("qty");
@@ -317,6 +334,13 @@
             );
         }
 
+        function setLocStorage() {
+            localStorage.setItem("Q_len", Q_len.value);
+            localStorage.setItem("Dev_limit", Dev_limit.value);
+            localStorage.setItem("Qty_alert", Qty_alert.value);
+            localStorage.setItem("Reset_sec", Reset_sec.value);
+        }
+
         function showhideChart() {
             if (btn_c.innerHTML == "Show Chart") {
                 candleChart.style.display = "inline-block";
@@ -330,10 +354,10 @@
         }
 
         function ws_trades() {
-            q_len = document.getElementById("ssize").value;
-            stddev_limit = document.getElementById("stddev_limit").value;
-            vlimit = document.getElementById("qty_limit").value;
-            resetAlertSec = document.getElementById("resetAlertSec").value;
+            q_len = Q_len.value;
+            stddev_limit = Dev_limit.value;
+            vlimit = Qty_alert.value;
+            resetAlertSec = Reset_sec.value;
             socket_live = new WebSocket(binanceWSS);
 
             socket_live.onopen = function (evt) {
