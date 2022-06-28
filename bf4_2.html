@@ -10,10 +10,10 @@
         const fontPriceMulti = 5;
 
         function getLocStorage() {
-            // console.log("Q_len:" + localStorage.getItem("Q_len"));
-            // console.log("Dev_limit:" + localStorage.getItem("Dev_limit"));
-            // console.log("Qty_alert:" + localStorage.getItem("Qty_alert"));
-            // console.log("Reset_sec:" + localStorage.getItem("Reset_sec"));
+            console.log("Q_len:" + localStorage.getItem("Q_len"));
+            console.log("Dev_limit:" + localStorage.getItem("Dev_limit"));
+            console.log("Qty_alert:" + localStorage.getItem("Qty_alert"));
+            console.log("Reset_sec:" + localStorage.getItem("Reset_sec"));
             Q_len.value = (localStorage.getItem("Q_len") != null) ? localStorage.getItem("Q_len") : 60;
             Dev_limit.value = (localStorage.getItem("Dev_limit") != null) ? localStorage.getItem("Dev_limit") : 0.12;
             Qty_alert.value = (localStorage.getItem("Qty_alert") != null) ? localStorage.getItem("Qty_alert") : 500;
