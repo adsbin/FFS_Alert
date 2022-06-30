@@ -140,6 +140,20 @@
             <td><input id="lowerPrice" type="text" value="" style="width: 42px;" /></td>
         </tr>
         <tr>
+            <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();">Start</button>
+                <!-- <button
+                    onclick="ws_trades();wrapTradingView(); Provision.style.display='none'; setLocStorage();">Start</button> -->
+            </td>
+            <td>
+                <!-- <button onclick="socket_live.close();Provision.style.display='block';">Stop</button> -->
+                <button onclick="socket_live.close();">Stop</button>
+            </td>
+            <td></td>
+            <td><button id="btn_showhidechart" onclick="showhideChart();">Hide Chart</button></td>
+        </tr>
+    </table>
+    <table style="width:100%">
+        <tr>
             <td>
                 <div id="PriceAlert" style="background-color: yellow; color:black;"></div>
             </td>
@@ -152,18 +166,12 @@
             <td>
                 <div id="volumeCount" style="background-color: yellow; color:black;"></div>
             </td>
-        </tr>
-        <tr>
-            <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();">Start</button>
-                <!-- <button
-                    onclick="ws_trades();wrapTradingView(); Provision.style.display='none'; setLocStorage();">Start</button> -->
+            <td>
+                <div id="whaleAlert" style="background-color: yellow; color:black;"></div>
             </td>
             <td>
-                <!-- <button onclick="socket_live.close();Provision.style.display='block';">Stop</button> -->
-                <button onclick="socket_live.close();">Stop</button>
+                <div id="whaleCount" style="background-color: yellow; color:black;"></div>
             </td>
-            <td></td>
-            <td><button id="btn_showhidechart" onclick="showhideChart();">Hide Chart</button></td>
         </tr>
     </table>
     <div id="chart" style="height:300px; overflow:auto; resize:both;">
@@ -313,6 +321,8 @@
         const P_count = document.getElementById("warnCount");
         const V_Alert = document.getElementById("volumeAlert");
         const V_count = document.getElementById("volumeCount");
+        const W_Alert = document.getElementById("whaleAlert");
+        const W_count = document.getElementById("whaleCount");
         const UpperP = document.getElementById("upperPrice");
         const LowerP = document.getElementById("lowerPrice");
         const CandleChart = document.getElementById("chart");
@@ -389,7 +399,7 @@
             let curDiff = (curPrice - curMean) * 100;
 
             Symbol.innerHTML = json_message['s'];
-            Price.innerHTML = DynTitle.innerHTML = curPrice + " : " + Math.trunc(curDiff) / 100;
+            Price.innerHTML = curPrice + " : " + Math.trunc(curDiff) / 100;
             //Change Price font size by deviation
             Price.style.fontSize = function () {
                 if (curMean != 0)
@@ -406,6 +416,7 @@
             limitAlert(curPrice);
             qtyAlert(curPrice, curQty);
             volAlert(curPrice);
+            dynamicTitle(curPrice);
         }
 
         function cal_stddev_mean(curPrice, curQty) {
@@ -458,8 +469,8 @@
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
-                    V_Alert.innerHTML = "";
-                    V_count.innerHTML = "";
+                    W_Alert.innerHTML = "";
+                    W_count.innerHTML = "";
                     VLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime;
                     console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
                     w_count_warn = 0;
@@ -470,8 +481,8 @@
                 k(200, 33, 10);
                 w_lastWarnTime = curTime;
                 VLog.innerHTML = ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + VLog.innerHTML;
-                V_Alert.innerHTML = "Whale: ";
-                V_count.innerHTML = w_count_warn;
+                W_Alert.innerHTML = "Whale: ";
+                W_count.innerHTML = w_count_warn;
             }
         }
 
@@ -507,6 +518,21 @@
                 priceQueue.length = 0;
                 curMean = 0; curStdDev = 0;
             }
+        }
+
+        function dynamicTitle(curPrice) {
+            DynTitle.innerHTML = "";
+
+            if (p_count_warn > 0)
+                DynTitle.innerHTML += "P" + p_count_warn + " | ";
+
+            if (v_count_warn > 0)
+                DynTitle.innerHTML += "V" + v_count_warn + " | ";
+
+            if (w_count_warn > 0)
+                DynTitle.innerHTML += "W" + w_count_warn + " | ";
+
+            DynTitle.innerHTML += curPrice;
         }
     </script>
 </body>
