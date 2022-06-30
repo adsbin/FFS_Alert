@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FFS Alert System 4.2</title>
+    <title id="dynTitle">FFS Alert System 4.3</title>
     <script>
-        const geckoapistr = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
+        const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
         const fontPriceMulti = 5;
 
@@ -317,6 +317,8 @@
         const LowerP = document.getElementById("lowerPrice");
         const CandleChart = document.getElementById("chart");
         const Provision = document.getElementById("provision");
+        const DynTitle = document.getElementById("dynTitle");
+        
 
         const FullDateTime = "Y-m-d H:i:s.v";
         const ShortTime = "H:i:s.v";
@@ -331,7 +333,7 @@
         }
 
         function get24HighLow() {
-            getAnyAPI(geckoapistr).then(
+            getAnyAPI(geckoapiURL).then(
                 data => {
                     UpperP.value = data[0].high_24h;
                     LowerP.value = data[0].low_24h;
@@ -387,7 +389,7 @@
             let curDiff = (curPrice - curMean) * 100;
 
             Symbol.innerHTML = json_message['s'];
-            Price.innerHTML = curPrice + " : " + Math.trunc(curDiff) / 100;
+            Price.innerHTML = DynTitle.innerHTML = curPrice + " : " + Math.trunc(curDiff) / 100;
             //Change Price font size by deviation
             Price.style.fontSize = function () {
                 if (curMean != 0)
