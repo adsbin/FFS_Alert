@@ -480,7 +480,7 @@
             if (curQty >= vlimit) {
                 k(200, 33, 10);
                 w_lastWarnTime = curTime;
-                VLog.innerHTML = ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "<br />" + VLog.innerHTML;
+                VLog.innerHTML = "<b>" + ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "</b><br />" + VLog.innerHTML;
                 W_Alert.innerHTML = "Whale: ";
                 W_count.innerHTML = w_count_warn;
             }
