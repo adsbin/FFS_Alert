@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS Alert System 5.0</title>
+    <title id="dynTitle">FFS BNB System 5.0</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
@@ -75,6 +75,10 @@
             padding: 0px 0px;
             border: 1px solid #ccc;
         }
+
+        .data1 {
+            font-size: 0.7em;
+        }
     </style>
 </head>
 
@@ -119,26 +123,25 @@
                 <td style="font-family: monospace;font-size: 9px">LowerLimit</td>
                 <td><input id="lowerPrice" type="text" value="" style="width: 42px;" /></td>
                 <td style="font-size: 9px">StdDev:</td>
-                <td style="font-size: 9px"><div id="stddev"></div></td>
+                <td class="data1"><div id="stddev"></div></td>
                 <td style="font-size: 9px">Mean:</td>
-                <td style="font-size: 9px"><div id="mean"></div></td>
+                <td class="data1"><div id="mean"></div></td>
             </tr>
         </table>
     </div>
     <div style="display:inline-table">
         <table style="display:inline-table;">
             <tr style="height:2.5em">
-                <td style="font-size: 9px">PRICE:</td>
-                <td style="width:110px">
+                <td style="width:150px">
                     <div id="price" style="color:yellow;"></div>
                 </td>
                 <td style="font-size: 9px">Vol:</td>
                 <td>
-                    <div id="sampleQty" style="font-size: 9px"></div>
+                    <div id="sampleQty" class="data1"></div>
                 </td>
                 <td style="font-size: 9px">QTY:</td>
                 <td style="width:30px">
-                    <span id="qty" style="font-size: 9px"></span>
+                    <span id="qty" class="data1"></span>
                 </td>
                 <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" style="font-size: 9px">Start</button></td>
                 <td><button onclick="socket_live.close();" style="font-size: 9px">Stop</button></td>
@@ -168,7 +171,7 @@
             </td>
         </tr>
     </table>
-    <div id="chart" style="height:75%; overflow:auto; resize:both;">
+    <div id="chart" style="height:70%; overflow:auto; resize:both;">
         <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container">
             <div id="tradingview_e4a42"></div>
@@ -227,11 +230,11 @@
 
     <!-- Tab content -->
     <div id="DeviationLog" class="tabcontent" style="display:block;">
-        <div id="stdDevLog" style="height:10%;font-size:14px;overflow-y:scroll;">Index: Mean; StdDev;
+        <div id="stdDevLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Mean; StdDev;
             minPrice,maxPrice; Vol; DateTime</div>
     </div>
     <div id="VolumeLog" class="tabcontent">
-        <div id="volLog" style="height:10%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
+        <div id="volLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
     </div>
     <div class="tab">
         <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
