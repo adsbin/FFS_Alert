@@ -76,7 +76,14 @@
             border: 1px solid #ccc;
         }
 
+        .caption1 {
+            font-size: 0.6em;
+        }
         .data1 {
+            font-size: 0.8em;
+        }
+
+        .button1 {
             font-size: 0.7em;
         }
     </style>
@@ -85,7 +92,7 @@
 <body onload="getLocStorage()">
     <div id="provision" style="display:inline-table">
         <table style="display:inline-table">
-            <tr style="font-size: 10px">
+            <tr class="caption1">
                 <td>Sample size:</td>
                 <td><input id="ssize" type="text" size="1" /></td>
                 <td>StdDev alert:</td>
@@ -99,18 +106,17 @@
     </div>
     <div style="display:inline-table">
         <table style="display:inline-table">
-            <tr style="font-size: 9px">
-                <td>SYMBOL:</td>
-                <td>
+            <tr>
+                <td class="caption1">SYMBOL:</td>
+                <td class="caption1">
                     <div id="symbol"></div>
                 </td>
-                <td>TIMESTAMP:</td>
-                <td>
+                <td class="caption1">TIMESTAMP:</td>
+                <td class="data1">
                     <span id="timestamp"></span>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" style="font-family: monospace;font-size: 9px">Get
-                        High/Low</button>
+                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get High/Low</button>
                 </td>
             </tr>
         </table>
@@ -118,13 +124,13 @@
     <div style="display:inline-table">
         <table style="display:inline-table;">
             <tr>
-                <td style="font-family: monospace;font-size: 9px">UpperLimit</td>
-                <td><input id="upperPrice" type="text" value="" style="width: 42px;" /></td>
-                <td style="font-family: monospace;font-size: 9px">LowerLimit</td>
-                <td><input id="lowerPrice" type="text" value="" style="width: 42px;" /></td>
-                <td style="font-size: 9px">StdDev:</td>
+                <td class="caption1">U.Limit</td>
+                <td><input id="upperPrice" type="text" value="" style="width: 65px;" /></td>
+                <td class="caption1">L.Limit</td>
+                <td><input id="lowerPrice" type="text" value="" style="width: 65px;" /></td>
+                <td class="caption1">StdDev:</td>
                 <td class="data1"><div id="stddev"></div></td>
-                <td style="font-size: 9px">Mean:</td>
+                <td class="caption1">Mean:</td>
                 <td class="data1"><div id="mean"></div></td>
             </tr>
         </table>
@@ -132,20 +138,19 @@
     <div style="display:inline-table">
         <table style="display:inline-table;">
             <tr style="height:2.5em">
-                <td style="width:130px">
+                <td style="width:150px">
                     <div id="price" style="color:yellow;"></div>
                 </td>
-                <td style="font-size: 9px">Vol:</td>
+                <td class="caption1">Vol:</td>
                 <td>
                     <div id="sampleQty" class="data1"></div>
                 </td>
-                <td style="font-size: 9px">QTY:</td>
-                <td style="width:30px">
+                <td class="caption1">QTY:</td>
+                <td style="width:40px">
                     <span id="qty" class="data1"></span>
                 </td>
-                <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" style="font-size: 9px">Start</button></td>
-                <td><button onclick="socket_live.close();" style="font-size: 9px">Stop</button></td>
-                <td><button id="btn_showhidechart" onclick="showhideChart();" style="font-size: 9px">H Chart</button></td>
+                <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" class="button1">Start</button></td>
+                <td><button id="btn_showhidechart" onclick="showhideChart();" class="button1">H Chart</button></td>
             </tr>
         </table>
     </div>

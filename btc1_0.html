@@ -16,7 +16,7 @@
                 "Reset_sec:" + localStorage.getItem("Reset_sec1") + ".");
             Q_len.value = (localStorage.getItem("Q_len1") != null) ? localStorage.getItem("Q_len1") : 60;
             Dev_limit.value = (localStorage.getItem("Dev_limit1") != null) ? localStorage.getItem("Dev_limit1") : 8;
-            Qty_alert.value = (localStorage.getItem("Qty_alert1") != null) ? localStorage.getItem("Qty_alert1") : 20;
+            Qty_alert.value = (localStorage.getItem("Qty_alert1") != null) ? localStorage.getItem("Qty_alert1") : 50;
             Reset_sec.value = (localStorage.getItem("Reset_sec1") != null) ? localStorage.getItem("Reset_sec1") : 90;
         }
 
@@ -76,7 +76,14 @@
             border: 1px solid #ccc;
         }
 
+        .caption1 {
+            font-size: 0.6em;
+        }
         .data1 {
+            font-size: 0.8em;
+        }
+
+        .button1 {
             font-size: 0.7em;
         }
     </style>
@@ -85,31 +92,31 @@
 <body onload="getLocStorage()">
     <div id="provision" style="display:inline-table">
         <table style="display:inline-table">
-            <tr style="font-size: 10px">
-                <td>Sample size:</td>
+            <tr>
+                <td class="caption1">Sample size:</td>
                 <td><input id="ssize" type="text" size="1" /></td>
-                <td>StdDev alert:</td>
+                <td class="caption1">StdDev alert:</td>
                 <td><input id="stddev_limit" type="text" size="1" /></td>
-                <td>Qty alert:</td>
+                <td class="caption1">Qty alert:</td>
                 <td><input id="qty_limit" type="text" size="1" /></td>
-                <td>Reset alert(s):</td>
+                <td class="caption1">Reset alert(s):</td>
                 <td><input id="resetAlertSec" type="text" size="1" /></td>
             </tr>
         </table>
     </div>
     <div style="display:inline-table">
         <table style="display:inline-table">
-            <tr style="font-size: 9px">
-                <td>SYMBOL:</td>
-                <td>
+            <tr>
+                <td class="caption1">SYMBOL:</td>
+                <td class="caption1">
                     <div id="symbol"></div>
                 </td>
-                <td>TIMESTAMP:</td>
-                <td>
+                <td class="caption1">TIMESTAMP:</td>
+                <td class="data1">
                     <span id="timestamp"></span>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" style="font-family: monospace;font-size: 9px">Get
+                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get
                         High/Low</button>
                 </td>
             </tr>
@@ -118,13 +125,13 @@
     <div style="display:inline-table">
         <table style="display:inline-table;">
             <tr>
-                <td style="font-family: monospace;font-size: 9px">U.Limit</td>
+                <td class="caption1">U.Limit</td>
                 <td><input id="upperPrice" type="text" value="" style="width: 65px;" /></td>
-                <td style="font-family: monospace;font-size: 9px">L.Limit</td>
+                <td class="caption1">L.Limit</td>
                 <td><input id="lowerPrice" type="text" value="" style="width: 65px;" /></td>
-                <td style="font-size: 9px">StdDev:</td>
+                <td class="caption1">StdDev:</td>
                 <td class="data1"><div id="stddev"></div></td>
-                <td style="font-size: 9px">Mean:</td>
+                <td class="caption1">Mean:</td>
                 <td class="data1"><div id="mean"></div></td>
             </tr>
         </table>
@@ -135,17 +142,16 @@
                 <td style="width:150px">
                     <div id="price" style="color:yellow;"></div>
                 </td>
-                <td style="font-size: 9px">Vol:</td>
+                <td class="caption1">Vol:</td>
                 <td>
                     <div id="sampleQty" class="data1"></div>
                 </td>
-                <td style="font-size: 9px">QTY:</td>
-                <td style="width:30px">
+                <td class="caption1">QTY:</td>
+                <td style="width:40px">
                     <span id="qty" class="data1"></span>
                 </td>
-                <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" style="font-size: 9px">Start</button></td>
-                <td><button onclick="socket_live.close();" style="font-size: 9px">Stop</button></td>
-                <td><button id="btn_showhidechart" onclick="showhideChart();" style="font-size: 9px">H Chart</button></td>
+                <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" class="button1">Start</button></td>
+                <td><button id="btn_showhidechart" onclick="showhideChart();" class="button1">H Chart</button></td>
             </tr>
         </table>
     </div>
