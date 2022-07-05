@@ -496,12 +496,18 @@
 
         function limitAlert(cPrice) {
             if (UpperP.value != "") {
-                UpperP.style.backgroundColor = (cPrice >= UpperP.value) ? "rgb(115, 255, 0)" : "initial";
-                k(200, 311, 100);
+                if (cPrice >= UpperP.value) {
+                    UpperP.style.backgroundColor = "rgb(115, 255, 0)";
+                    k(200, 311, 100);
+                }
+                else UpperP.style.backgroundColor = "initial";
             }
             if (LowerP.value != "") {
-                LowerP.style.backgroundColor = (cPrice <= LowerP.value) ? "rgb(250, 150, 150)" : "initial";
-                k(200, 188, 100);
+                if (cPrice <= LowerP.value) {
+                    LowerP.style.backgroundColor = "rgb(250, 150, 150)";
+                    k(200, 188, 100);
+                }
+                else LowerP.style.backgroundColor = "initial";
             }
         }
 
