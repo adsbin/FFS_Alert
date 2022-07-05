@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS Alert BTC 1.0</title>
+    <title id="dynTitle">FFS BTC System 1.0</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/btcusdt@trade";
@@ -17,7 +17,7 @@
             Q_len.value = (localStorage.getItem("Q_len1") != null) ? localStorage.getItem("Q_len1") : 60;
             Dev_limit.value = (localStorage.getItem("Dev_limit1") != null) ? localStorage.getItem("Dev_limit1") : 8;
             Qty_alert.value = (localStorage.getItem("Qty_alert1") != null) ? localStorage.getItem("Qty_alert1") : 50;
-            Reset_sec.value = (localStorage.getItem("Reset_sec1") != null) ? localStorage.getItem("Reset_sec1") : 90;
+            Reset_sec.value = (localStorage.getItem("Reset_sec1") != null) ? localStorage.getItem("Reset_sec1") : 180;
         }
 
         function openTab(evt, tabName) {
@@ -79,6 +79,7 @@
         .caption1 {
             font-size: 0.6em;
         }
+
         .data1 {
             font-size: 0.8em;
         }
@@ -130,9 +131,13 @@
                 <td class="caption1">L.Limit</td>
                 <td><input id="lowerPrice" type="text" value="" style="width: 65px;" /></td>
                 <td class="caption1">StdDev:</td>
-                <td class="data1"><div id="stddev"></div></td>
+                <td class="data1">
+                    <div id="stddev"></div>
+                </td>
                 <td class="caption1">Mean:</td>
-                <td class="data1"><div id="mean"></div></td>
+                <td class="data1">
+                    <div id="mean"></div>
+                </td>
             </tr>
         </table>
     </div>
@@ -150,7 +155,8 @@
                 <td style="width:40px">
                     <span id="qty" class="data1"></span>
                 </td>
-                <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" class="button1">Start</button></td>
+                <td><button onclick="ws_trades();wrapTradingView(); setLocStorage();" class="button1">Start</button>
+                </td>
                 <td><button id="btn_showhidechart" onclick="showhideChart();" class="button1">H Chart</button></td>
             </tr>
         </table>
