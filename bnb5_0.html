@@ -459,7 +459,7 @@
             }
 
             if (curVol >= vlimit) {
-                k(200, 33, 10);
+                k(200, 33, 20);
                 v_lastWarnTime = curTime;
                 VLog.innerHTML = "<i>" + ++v_count_warn + ": " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + VLog.innerHTML;
                 V_Alert.innerHTML = "V. Alert: ";
@@ -486,7 +486,7 @@
             }
 
             if (curQty >= vlimit) {
-                k(200, 33, 10);
+                k(200, 55, 300);
                 w_lastWarnTime = curTime;
                 VLog.innerHTML = "<b>" + ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "</b><br />" + VLog.innerHTML;
                 W_Alert.innerHTML = "Whale: ";
@@ -495,10 +495,14 @@
         }
 
         function limitAlert(cPrice) {
-            if (UpperP.value != "")
+            if (UpperP.value != "") {
                 UpperP.style.backgroundColor = (cPrice >= UpperP.value) ? "rgb(115, 255, 0)" : "initial";
-            if (LowerP.value != "")
+                k(200, 311, 100);
+            }
+            if (LowerP.value != "") {
                 LowerP.style.backgroundColor = (cPrice <= LowerP.value) ? "rgb(250, 150, 150)" : "initial";
+                k(200, 188, 100);
+            }
         }
 
         function StdDevAlert() {
