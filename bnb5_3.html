@@ -462,7 +462,7 @@
                 if (secDiff > resetAlertSec && v_count_warn != 0) {
                     V_Alert.innerHTML = "";
                     V_count.innerHTML = "";
-                    VLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime;
+                    VLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn;
                     console.log("Vol last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn);
                     v_count_warn = 0;
                 }
@@ -489,7 +489,7 @@
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
                     W_Alert.innerHTML = "";
                     W_count.innerHTML = "";
-                    VLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime;
+                    VLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn;
                     console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
                     w_count_warn = 0;
                 }
