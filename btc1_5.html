@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BTC System 1.4</title>
+    <title id="dynTitle">FFS BTC System 1.5</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/btcusdt@trade";
@@ -14,10 +14,10 @@
                 "Dev_limit:" + localStorage.getItem("Dev_limit1") + "; " +
                 "Qty_alert:" + localStorage.getItem("Qty_alert1") + "; " +
                 "Reset_sec:" + localStorage.getItem("Reset_sec1") + ".");
-            Q_len.value = (localStorage.getItem("Q_len1") != null) ? localStorage.getItem("Q_len1") : 240;
-            Dev_limit.value = (localStorage.getItem("Dev_limit1") != null) ? localStorage.getItem("Dev_limit1") : 4;
-            Qty_alert.value = (localStorage.getItem("Qty_alert1") != null) ? localStorage.getItem("Qty_alert1") : 50;
-            Reset_sec.value = (localStorage.getItem("Reset_sec1") != null) ? localStorage.getItem("Reset_sec1") : 180;
+            Q_len.value = (localStorage.getItem("Q_len1")) ? localStorage.getItem("Q_len1") : 240;
+            Dev_limit.value = (localStorage.getItem("Dev_limit1")) ? localStorage.getItem("Dev_limit1") : 6;
+            Qty_alert.value = (localStorage.getItem("Qty_alert1")) ? localStorage.getItem("Qty_alert1") : 50;
+            Reset_sec.value = (localStorage.getItem("Reset_sec1")) ? localStorage.getItem("Reset_sec1") : 180;
         }
 
         function openTab(evt, tabName) {
@@ -116,6 +116,9 @@
                 </td>
                 <td>
                     <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get High/Low</button>
+                </td>
+                <td>
+                    <button id="btnShowHideSet" onclick="SHSettings();" class="button1">H Settings</button>
                 </td>
             </tr>
         </table>
@@ -347,6 +350,7 @@
         const ShortTime = "H:i:s.v";
 
         const Btn_c = document.getElementById("btn_showhidechart");
+        const Btn_s = document.getElementById("btnShowHideSet");
         const SdLog = document.getElementById("stdDevLog");
         const VLog = document.getElementById("volLog");
 
@@ -381,7 +385,18 @@
             else {
                 CandleChart.style.display = "none";
                 Btn_c.innerHTML = "S Chart";
-                tvWidget.innerHTML="";
+                tvWidget.innerHTML = "";
+            }
+        }
+
+        function SHSettings() {
+            if (Btn_s.innerHTML == "S Settings") {
+                Provision.style.display = "inline-block";
+                Btn_s.innerHTML = "H Settings";
+            }
+            else {
+                Provision.style.display = "none";
+                Btn_s.innerHTML = "S Settings";
             }
         }
 
