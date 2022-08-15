@@ -16,7 +16,7 @@
                 "Reset_sec:" + localStorage.getItem("Reset_sec") + ".");
             Q_len.value = (localStorage.getItem("Q_len")) ? localStorage.getItem("Q_len") : 60;
             Dev_limit.value = (localStorage.getItem("Dev_limit")) ? localStorage.getItem("Dev_limit") : 0.12;
-            Qty_alert.value = (localStorage.getItem("Qty_alert")) ? localStorage.getItem("Qty_alert") : 500;
+            Qty_alert.value = (localStorage.getItem("Qty_alert")) ? localStorage.getItem("Qty_alert") : "500/250";
             Reset_sec.value = (localStorage.getItem("Reset_sec")) ? localStorage.getItem("Reset_sec") : 180;
         }
 
@@ -253,9 +253,13 @@
     <div id="VolumeLog" class="tabcontent">
         <div id="volLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
     </div>
+    <div id="WhaleLog" class="tabcontent">
+        <div id="whaLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
+    </div>
     <div class="tab">
         <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
         <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
+        <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
     </div>
     <script>
         //#region Util        
@@ -314,7 +318,7 @@
                 .replace(/v/gm, ('0000' + (d.getMilliseconds() % 1000)).substr(-3));
         }
         //#endregion
-        let stddev_limit, q_len, vlimit, resetAlertSec;
+        let stddev_limit, q_len, vlimit, wlimit, resetAlertSec;
         let priceQueue = [], volQueue = [];
         let p_count_warn = 0, v_count_warn = 0, w_count_warn = 0, curStdDev = 0, curMean = 0, curVol = 0;
         let p_lastWarnTime = Date.now(), v_lastWarnTime = Date.now(), w_lastWarnTime = Date.now();
@@ -355,6 +359,7 @@
         const Btn_s = document.getElementById("btnShowHideSet");
         const SdLog = document.getElementById("stdDevLog");
         const VLog = document.getElementById("volLog");
+        const WLog = document.getElementById("whaLog");
 
         async function getAnyAPI(apiURL) {
             let response = await fetch(apiURL);
@@ -409,7 +414,8 @@
         function ws_trades() {
             q_len = Q_len.value;
             stddev_limit = Dev_limit.value;
-            vlimit = Qty_alert.value;
+            vlimit = Qty_alert.value.split("/")[0];
+            wlimit = Qty_alert.value.split("/")[1];
             resetAlertSec = Reset_sec.value;
             socket_live = new WebSocket(binanceWSS);
 
@@ -509,16 +515,16 @@
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
                     W_Alert.innerHTML = "";
                     W_count.innerHTML = "";
-                    VLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn;
+                    WLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn;
                     console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
                     w_count_warn = 0;
                 }
             }
 
-            if (curQty >= vlimit) {
+            if (curQty >= wlimit) {
                 k(200, 55, 200);
                 w_lastWarnTime = curTime;
-                VLog.innerHTML = "<b>" + ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "</b><br />" + VLog.innerHTML;
+                WLog.innerHTML = "<b>" + ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "</b><br />" + WLog.innerHTML;
                 W_Alert.innerHTML = "Whale: ";
                 W_count.innerHTML = w_count_warn;
             }
