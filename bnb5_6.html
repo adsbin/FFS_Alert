@@ -95,13 +95,13 @@
         <table style="display:inline-table">
             <tr class="caption1">
                 <td>Sample size:</td>
-                <td><input id="ssize" type="text" size="1" /></td>
+                <td><input id="ssize" type="text" style="width: 25px;" /></td>
                 <td>StdDev alert:</td>
-                <td><input id="stddev_limit" type="text" size="1" /></td>
+                <td><input id="stddev_limit" type="text" style="width: 45px;" /></td>
                 <td>Vol/Qty alert:</td>
-                <td><input id="qty_limit" type="text" size="1" /></td>
+                <td><input id="qty_limit" type="text" style="width: 65px;" onblur="this.style.width = ((this.value.length + 1) * 8) + 'px';" /></td>
                 <td>Reset in (s):</td>
-                <td><input id="resetAlertSec" type="text" size="1" /></td>
+                <td><input id="resetAlertSec" type="text" style="width: 35px;" /></td>
             </tr>
         </table>
     </div>
@@ -146,7 +146,7 @@
     <div style="display:inline-table">
         <table style="display:inline-table;">
             <tr style="height:2.5em">
-                <td style="width:170px">
+                <td style="width:160px">
                     <div id="price" style="color:yellow;"></div>
                 </td>
                 <td class="caption1">
