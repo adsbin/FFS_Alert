@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 1.6</title>
+    <title id="dynTitle">FFS CAKE System 2.0</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
         const binanceWSS = "wss://stream.binance.com:9443/ws/cakeusdt@trade";
@@ -99,8 +99,9 @@
                 <td>StdDev alert:</td>
                 <td><input id="stddev_limit" type="text" style="width: 45px;" /></td>
                 <td>Vol/Qty alert:</td>
-                <td><input id="qty_limit" type="text" style="width: 75px;" onblur="this.style.width = ((this.value.length + 1) * 8) + 'px';" /></td>
-                <td>Reset in (s):</td>
+                <td><input id="qty_limit" type="text" style="width: 75px;"
+                        onblur="this.style.width = ((this.value.length + 1) * 8) + 'px';" /></td>
+                <td><span id="hiddenReset">Reset</span> in (s):</td>
                 <td><input id="resetAlertSec" type="text" style="width: 35px;" /></td>
             </tr>
         </table>
@@ -133,11 +134,11 @@
                 <td class="caption1">
                     <div id="pQueue" style="display:inline-table"></div>StdDev:
                 </td>
-                <td class="data1">
+                <td class="data1" style="width:60px">
                     <div id="stddev"></div>
                 </td>
                 <td class="caption1">Mean:</td>
-                <td class="data1">
+                <td class="data1" style="width:60px">
                     <div id="mean"></div>
                 </td>
             </tr>
@@ -145,21 +146,23 @@
     </div>
     <div style="display:inline-table">
         <table style="display:inline-table;">
-            <tr style="height:2.5em">
-                <td style="width:170px">
-                    <div id="price" style="color:yellow;"></div>
+            <tr>
+                <td>
+                    <div id="price" style="display:inline-table; width: 140px; color:yellow;">
+                    </div>
                 </td>
                 <td class="caption1">
                     <div id="vQueue" style="display:inline-table"></div>Vol:
                 </td>
-                <td>
-                    <div id="sampleQty" class="data1"></div>
+                <td style="width:30px">
+                    <span id="sampleQty" class="data1"></span>
                 </td>
                 <td class="caption1">QTY:</td>
                 <td style="width:40px">
                     <span id="qty" class="data1"></span>
                 </td>
-                <td><button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage();" class="button1">Start</button>
+                <td><button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage();"
+                        class="button1">Start</button>
                 </td>
                 <td><button id="btn_showhidechart" onclick="showhideChart();" class="button1">H Chart</button></td>
             </tr>
@@ -187,7 +190,7 @@
             </td>
         </tr>
     </table>
-    <div id="chart" style="height:70%; overflow:auto; resize:both;">
+    <div id="chart" style="height:65%; overflow:auto; resize:both;">
         <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container">
             <div id="tradingview_cake"></div>
@@ -360,6 +363,14 @@
         const SdLog = document.getElementById("stdDevLog");
         const VLog = document.getElementById("volLog");
         const WLog = document.getElementById("whaLog");
+        const HiddenReset = document.getElementById("hiddenReset");
+
+        HiddenReset.addEventListener('click', function (evt) {
+            if (evt.detail === 3) {
+                localStorage.clear();
+                alert('You found me! All local storage cleared!');
+            }
+        });
 
         async function getAnyAPI(apiURL) {
             let response = await fetch(apiURL);
@@ -443,12 +454,13 @@
             Symbol.innerHTML = json_message['s'];
             Price.innerHTML = curPrice + " : " + curDiff;
             //Change Price font size by deviation
-            Price.style.fontSize = function () {
-                if (curMean != 0)
-                    return (Math.trunc((1 + curDiff * fontPriceMulti / curMean) * 1000) / 1000).toString() + "em";
-                else
-                    return "1em";
-            }();
+
+            // Price.style.fontSize = function () {
+            //     if (curMean != 0)
+            //         return (Math.trunc((1 + curDiff * fontPriceMulti / curMean) * 1000) / 1000).toString() + "em";
+            //     else
+            //         return "1em";
+            // }();
             Qty.innerHTML = curQty;
             TStamp.innerHTML = formatted_dateTime;
             pQueueNum.innerHTML = priceQueue.length + 1;
