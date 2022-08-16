@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BNB System 6.0</title>
+    <title id="dynTitle">FFS BNB System 6.1</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
@@ -251,8 +251,7 @@
 
     <!-- Tab content -->
     <div id="DeviationLog" class="tabcontent" style="display:block;">
-        <div id="stdDevLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Mean; StdDev;
-            minPrice,maxPrice; Vol; DateTime</div>
+        <div id="stdDevLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime</div>
     </div>
     <div id="VolumeLog" class="tabcontent">
         <div id="volLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
@@ -499,10 +498,11 @@
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && v_count_warn != 0) {
-                    V_Alert.innerHTML = "";
-                    V_count.innerHTML = "";
-                    VLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn;
+                    console.log(VLog.innerHTML.trim());
                     console.log("Vol last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn);
+                    VLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn;
+                    V_Alert.innerHTML = "";
+                    V_count.innerHTML = "";             
                     v_count_warn = 0;
                 }
             }
@@ -526,10 +526,11 @@
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
+                    console.log(WLog.innerHTML.trim());
+                    console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);                    
+                    WLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn;
                     W_Alert.innerHTML = "";
                     W_count.innerHTML = "";
-                    WLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn;
-                    console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
                     w_count_warn = 0;
                 }
             }
@@ -567,10 +568,11 @@
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && p_count_warn != 0) {
+                    console.log(SdLog.innerHTML.trim());
+                    console.log("Dev last reset: " + formatted_dateTime + "; P. Alert: " + p_count_warn);
+                    SdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + "; Dev Alert: " + p_count_warn;
                     P_Alert.innerHTML = "";
                     P_count.innerHTML = "";
-                    SdLog.innerHTML = "Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime<br />Last reset: " + formatted_dateTime + "; Dev Alert: " + p_count_warn;
-                    console.log("Dev last reset: " + formatted_dateTime + "; P. Alert: " + p_count_warn);
                     p_count_warn = 0;
                 }
             }
