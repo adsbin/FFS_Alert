@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 2.1</title>
+    <title id="dynTitle">FFS CAKE System 2.2</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
         const binanceWSS = "wss://stream.binance.com:9443/ws/cakeusdt@trade";
@@ -68,7 +68,7 @@
 
         .tab button.active {
             background-color: #ccc;
-            color: rgb(255,255,255);
+            color: rgb(255, 255, 255);
         }
 
         .tabcontent {
@@ -77,6 +77,11 @@
             border: 1px solid #ccc;
         }
 
+        .logcontent {
+            height:15%;
+            font-size:14px;
+            overflow-y:scroll;
+        }
         .caption1 {
             font-size: 0.6em;
         }
@@ -98,10 +103,13 @@
                 <td>Sample size:</td>
                 <td><input id="ssize" type="text" style="width: 25px;" /></td>
                 <td>StdDev alert:</td>
-                <td><input id="stddev_limit" type="text" style="width: 45px;" /></td>
+                <td><input id="stddev_limit" type="text" style="width: 45px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
+                </td>
                 <td>Vol/Qty alert:</td>
-                <td><input id="qty_limit" type="text" style="width: 75px;"
-                        onblur="this.style.width = ((this.value.length + 1) * 8) + 'px';" /></td>
+                <td><input id="qty_limit" type="text" style="width: 75px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
+                </td>
                 <td><span id="hiddenReset">Reset</span> in (s):</td>
                 <td><input id="resetAlertSec" type="text" style="width: 35px;" /></td>
             </tr>
@@ -129,9 +137,13 @@
         <table style="display:inline-table;">
             <tr>
                 <td class="caption1">U.Limit</td>
-                <td><input id="upperPrice" type="text" value="" style="width: 65px;" /></td>
+                <td><input id="upperPrice" type="text" value="" style="width: 65px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
+                </td>
                 <td class="caption1">L.Limit</td>
-                <td><input id="lowerPrice" type="text" value="" style="width: 65px;" /></td>
+                <td><input id="lowerPrice" type="text" value="" style="width: 65px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
+                </td>
                 <td class="caption1">
                     <div id="pQueue" style="display:inline-table"></div>StdDev:
                 </td>
@@ -251,13 +263,13 @@
 
     <!-- Tab content -->
     <div id="DeviationLog" class="tabcontent" style="display:block;">
-        <div id="stdDevLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime</div>
+        <div id="stdDevLog" class="logcontent">Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime</div>
     </div>
     <div id="VolumeLog" class="tabcontent">
-        <div id="volLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
+        <div id="volLog" class="logcontent">Index: Qty; Price; DateTime</div>
     </div>
     <div id="WhaleLog" class="tabcontent">
-        <div id="whaLog" style="height:15%;font-size:14px;overflow-y:scroll;">Index: Qty; Price; DateTime</div>
+        <div id="whaLog" class="logcontent">Index: Qty; Price; DateTime</div>
     </div>
     <div class="tab">
         <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
@@ -382,6 +394,8 @@
                 data => {
                     UpperP.value = data[0].high_24h;
                     LowerP.value = data[0].low_24h;
+                    UpperP.style.width = ((UpperP.value.length + 1) * 8) + 'px';
+                    LowerP.style.width = ((LowerP.value.length + 1) * 8) + 'px';
                 }
             );
         }
@@ -502,7 +516,7 @@
                     console.log("Vol last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn);
                     VLog.innerHTML = "Index: Vol; Price; DateTime<br />Last reset: " + formatted_dateTime + "; V. Alert: " + v_count_warn;
                     V_Alert.innerHTML = "";
-                    V_count.innerHTML = "";             
+                    V_count.innerHTML = "";
                     v_count_warn = 0;
                 }
             }
@@ -527,7 +541,7 @@
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
                     console.log(WLog.innerHTML.trim());
-                    console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);                    
+                    console.log("Whale last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn);
                     WLog.innerHTML = "Index: Qty; Price; DateTime<br />Last reset: " + formatted_dateTime + "; W. Alert: " + w_count_warn;
                     W_Alert.innerHTML = "";
                     W_count.innerHTML = "";
@@ -602,6 +616,10 @@
                 DynTitle.innerHTML += "W" + w_count_warn + " | ";
 
             DynTitle.innerHTML += curPrice;
+        }
+
+        function adjustWidth(obj) {
+            obj.style.width = ((obj.value.length + 1) * 8) + 'px';
         }
     </script>
 </body>
