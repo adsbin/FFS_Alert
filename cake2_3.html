@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 2.2</title>
+    <title id="dynTitle">FFS CAKE System 2.3</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
         const binanceWSS = "wss://stream.binance.com:9443/ws/cakeusdt@trade";
@@ -59,7 +59,7 @@
             cursor: pointer;
             padding: 0px 0px;
             transition: 0.3s;
-            font-size: 14px;
+            font-size: 0.7em;
         }
 
         .tab button:hover {
@@ -79,7 +79,7 @@
 
         .logcontent {
             height:15%;
-            font-size:14px;
+            font-size:0.8em;
             overflow-y:scroll;
         }
         .caption1 {
@@ -92,6 +92,11 @@
 
         .button1 {
             font-size: 0.7em;
+        }
+
+        .alertText {
+            background-color: yellow; 
+            color:black;
         }
     </style>
 </head>
@@ -174,7 +179,7 @@
                 <td style="width:40px">
                     <span id="qty" class="data1"></span>
                 </td>
-                <td><button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage();"
+                <td><button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
                         class="button1">Start</button>
                 </td>
                 <td><button id="btn_showhidechart" onclick="showhideChart();" class="button1">H Chart</button></td>
@@ -184,22 +189,22 @@
     <table style="width:100%">
         <tr>
             <td>
-                <div id="PriceAlert" style="background-color: yellow; color:black;"></div>
+                <div id="PriceAlert" class="alertText"></div>
             </td>
             <td>
-                <div id="warnCount" style="background-color: yellow; color:black;"></div>
+                <div id="warnCount" class="alertText"></div>
             </td>
             <td>
-                <div id="volumeAlert" style="background-color: yellow; color:black;"></div>
+                <div id="volumeAlert" class="alertText"></div>
             </td>
             <td>
-                <div id="volumeCount" style="background-color: yellow; color:black;"></div>
+                <div id="volumeCount" class="alertText"></div>
             </td>
             <td>
-                <div id="whaleAlert" style="background-color: yellow; color:black;"></div>
+                <div id="whaleAlert" class="alertText"></div>
             </td>
             <td>
-                <div id="whaleCount" style="background-color: yellow; color:black;"></div>
+                <div id="whaleCount" class="alertText"></div>
             </td>
         </tr>
     </table>
@@ -616,6 +621,13 @@
                 DynTitle.innerHTML += "W" + w_count_warn + " | ";
 
             DynTitle.innerHTML += curPrice;
+        }
+
+        function autoResizeTextbox() {
+            let txtBox = document.getElementsByTagName("input");
+            for(i=0;i<txtBox.length;i++) 
+                if(txtBox[i].type=="text")
+                    adjustWidth(txtBox[i]);            
         }
 
         function adjustWidth(obj) {
