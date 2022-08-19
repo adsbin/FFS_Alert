@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BNB System 6.3</title>
+    <title id="dynTitle">FFS BNB System 6.4</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
@@ -130,10 +130,16 @@
                     <span id="timestamp"></span>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get High/Low</button>
+                    <button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
+                    class="button1">Start</button>                    
                 </td>
                 <td>
-                    <button id="btnShowHideSet" onclick="SHSettings();" class="button1">H Settings</button>
+                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get limits</button>                    
+                </td>
+                <td>
+                    <div class="button1">
+                        <input type="checkbox" id="cbSound" style="width:12px; height:12px;" />Sound
+                    </div>
                 </td>
             </tr>
         </table>
@@ -166,7 +172,7 @@
         <table style="display:inline-table;">
             <tr>
                 <td>
-                    <div id="price" style="display:inline-table; width: 140px; color:yellow;">
+                    <div id="price" style="display:inline-table; width: 130px; color:yellow;">
                     </div>
                 </td>
                 <td class="caption1">
@@ -179,8 +185,7 @@
                 <td style="width:40px">
                     <span id="qty" class="data1"></span>
                 </td>
-                <td><button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
-                        class="button1">Start</button>
+                <td><button id="btnShowHideSet" onclick="SHSettings();" class="button1">H Conf</button>
                 </td>
                 <td><button id="btn_showhidechart" onclick="showhideChart();" class="button1">H Chart</button></td>
             </tr>
@@ -381,6 +386,7 @@
         const VLog = document.getElementById("volLog");
         const WLog = document.getElementById("whaLog");
         const HiddenReset = document.getElementById("hiddenReset");
+        const CBSound = document.getElementById("cbSound");
 
         HiddenReset.addEventListener('click', function (evt) {
             if (evt.detail === 3) {
@@ -427,17 +433,17 @@
         }
 
         function SHSettings() {
-            if (Btn_s.innerHTML == "S Settings") {
+            if (Btn_s.innerHTML == "S Conf") {
                 Provision.style.display = "inline-block";
                 Btn_GetHL.style.display = "inline-block";
                 Btn_Start.style.display = "inline-block";
-                Btn_s.innerHTML = "H Settings";
+                Btn_s.innerHTML = "H Conf";
             }
             else {
                 Provision.style.display = "none";
                 Btn_GetHL.style.display = "none";
                 Btn_Start.style.display = "none";
-                Btn_s.innerHTML = "S Settings";
+                Btn_s.innerHTML = "S Conf";
             }
         }
 
@@ -527,7 +533,8 @@
             }
 
             if (curVol >= vlimit) {
-                k(200, 33, 100);
+                if (CBSound.checked)
+                    k(200, 33, 100);
                 v_lastWarnTime = curTime;
                 VLog.innerHTML = "<i>" + ++v_count_warn + ": " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + VLog.innerHTML;
                 V_Alert.innerHTML = "V. Alert: ";
@@ -555,7 +562,8 @@
             }
 
             if (curQty >= wlimit) {
-                k(200, 55, 200);
+                if (CBSound.checked)
+                    k(200, 55, 200);
                 w_lastWarnTime = curTime;
                 WLog.innerHTML = "<b>" + ++w_count_warn + ": " + curQty + "; " + curPrice + "; " + formatted_dateTime + "</b><br />" + WLog.innerHTML;
                 W_Alert.innerHTML = "Whale: ";
@@ -567,14 +575,16 @@
             if (UpperP.value != "") {
                 if (cPrice >= UpperP.value) {
                     UpperP.style.backgroundColor = "rgb(115, 255, 0)";
-                    k(200, 311, 100);
+                    if (CBSound.checked)
+                        k(200, 311, 100);
                 }
                 else UpperP.style.backgroundColor = "initial";
             }
             if (LowerP.value != "") {
                 if (cPrice <= LowerP.value) {
                     LowerP.style.backgroundColor = "rgb(250, 150, 150)";
-                    k(200, 188, 100);
+                    if (CBSound.checked)
+                        k(200, 188, 100);
                 }
                 else LowerP.style.backgroundColor = "initial";
             }
@@ -597,7 +607,8 @@
             }
 
             if (curStdDev >= stddev_limit) {
-                snd.play();
+                if (CBSound.checked)
+                    snd.play();
                 p_lastWarnTime = curTime;
                 P_Alert.innerHTML = "P. Alert: ";
                 P_count.innerHTML = ++p_count_warn;
