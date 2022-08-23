@@ -270,8 +270,6 @@
         </div>
         <!-- TradingView Widget END -->
     </div>
-
-    <!-- Tab content -->
     <div id="DeviationLog" class="tabcontent" style="display:block;">
         <div id="stdDevLog" class="logcontent">Index: Mean; StdDev; minPrice,maxPrice;  Vol; DateTime</div>
     </div>
@@ -286,8 +284,7 @@
         <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
         <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
     </div>
-    <script>
-        //#region Util        
+    <script>   
         function k(w, x, y) {
             let a = new AudioContext();
             //console.log("Gain:"+w, "Hz:"+x, "ms:"+y)
@@ -342,7 +339,6 @@
                 .replace(/s/gm, ('0' + (d.getSeconds() + 0)).substr(-2))
                 .replace(/v/gm, ('0000' + (d.getMilliseconds() % 1000)).substr(-3));
         }
-        //#endregion
         let stddev_limit, q_len, vlimit, wlimit, resetAlertSec;
         let priceQueue = [], volQueue = [];
         let p_count_warn = 0, v_count_warn = 0, w_count_warn = 0, curStdDev = 0, curMean = 0, curVol = 0;
@@ -468,7 +464,6 @@
         }
 
         function handle_trades(json_message) {
-            //alert("In handle_trades:" + JSON.stringify(json_message));
             let formatted_dateTime = format(json_message['E'], FullDateTime);
             let curPrice = Math.trunc(json_message['p'] * 100) / 100;
             let curQty = Math.trunc(json_message['q'] * 1000) / 1000;
@@ -478,8 +473,6 @@
 
             Symbol.innerHTML = json_message['s'];
             Price.innerHTML = curPrice + " : " + Math.trunc(curDiff) / 100;
-            //Change Price font size by deviation
-
             // Price.style.fontSize = function () {
             //     if (curMean != 0)
             //         return (Math.trunc((1 + curDiff * fontPriceMulti / curMean) * 100) / 100).toString() + "em";
@@ -509,7 +502,6 @@
                 priceQueue.shift();
             }
             if (volQueue.length >= q_len) {
-                //Calculate sample volume
                 const reducer = (accumulator, curr) => accumulator + curr;
                 curVol = Math.trunc(volQueue.reduce(reducer));
                 volQueue.shift();
@@ -539,7 +531,6 @@
                 VLog.innerHTML = "<i>" + ++v_count_warn + ": " + curVol + "; " + curPrice + "; " + formatted_dateTime + "</i><br />" + VLog.innerHTML;
                 V_Alert.innerHTML = "V. Alert: ";
                 V_count.innerHTML = v_count_warn;
-                //Trial clear qtyQueue
                 volQueue.length = 0;
                 curVol = 0;
             }
@@ -613,7 +604,6 @@
                 P_Alert.innerHTML = "P. Alert: ";
                 P_count.innerHTML = ++p_count_warn;
                 SdLog.innerHTML = p_count_warn + ": " + curMean + "; " + curStdDev + "; " + Math.min.apply(null, priceQueue) + "," + Math.max.apply(null, priceQueue) + "; " + curVol + "; " + formatted_dateTime + "<br />" + SdLog.innerHTML;
-                //Trial clear priceQueue
                 priceQueue.length = 0;
                 curMean = 0; curStdDev = 0;
             }
