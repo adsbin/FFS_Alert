@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 6.4 Muted Sound SP Edition</title>
+    <title id="dynTitle">FFS CAKE System 6.5 Boring Edition</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
         const binanceWSS = "wss://stream.binance.com:9443/ws/cakeusdt@trade";
@@ -433,12 +433,16 @@
                 Provision.style.display = "inline-block";
                 Btn_GetHL.style.display = "inline-block";
                 Btn_Start.style.display = "inline-block";
+                pQueueNum.style.display = "inline-block";
+                SampleQtyNum.style.display = "inline-block";
                 Btn_s.innerHTML = "H Conf";
             }
             else {
                 Provision.style.display = "none";
                 Btn_GetHL.style.display = "none";
                 Btn_Start.style.display = "none";
+                pQueueNum.style.display = "none";
+                SampleQtyNum.style.display = "none";
                 Btn_s.innerHTML = "S Conf";
             }
         }

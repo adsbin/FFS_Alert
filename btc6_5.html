@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BNB System 6.4 Muted Sound SP Edition</title>
+    <title id="dynTitle">FFS BTC System 6.5 Boring Edition</title>
     <script>
-        const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
-        const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
-        const fontPriceMulti = 5;
+        const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin";
+        const binanceWSS = "wss://stream.binance.com:9443/ws/btcusdt@trade";
+        const fontPriceMulti = 15;
 
         function getLocStorage() {
-            console.log("From localStorage: Q_len:" + localStorage.getItem("Q_len") + "; " +
-                "Dev_limit:" + localStorage.getItem("Dev_limit") + "; " +
-                "Qty_alert:" + localStorage.getItem("Qty_alert") + "; " +
-                "Reset_sec:" + localStorage.getItem("Reset_sec") + ".");
-            Q_len.value = (localStorage.getItem("Q_len")) ? localStorage.getItem("Q_len") : 60;
-            Dev_limit.value = (localStorage.getItem("Dev_limit")) ? localStorage.getItem("Dev_limit") : 0.12;
-            Qty_alert.value = (localStorage.getItem("Qty_alert")) ? localStorage.getItem("Qty_alert") : "500/250";
-            Reset_sec.value = (localStorage.getItem("Reset_sec")) ? localStorage.getItem("Reset_sec") : 180;
+            console.log("From localStorage: Q_len:" + localStorage.getItem("Q_len1") + "; " +
+                "Dev_limit:" + localStorage.getItem("Dev_limit1") + "; " +
+                "Qty_alert:" + localStorage.getItem("Qty_alert1") + "; " +
+                "Reset_sec:" + localStorage.getItem("Reset_sec1") + ".");
+            Q_len.value = (localStorage.getItem("Q_len1")) ? localStorage.getItem("Q_len1") : 240;
+            Dev_limit.value = (localStorage.getItem("Dev_limit1")) ? localStorage.getItem("Dev_limit1") : 6;
+            Qty_alert.value = (localStorage.getItem("Qty_alert1")) ? localStorage.getItem("Qty_alert1") : "50/25";
+            Reset_sec.value = (localStorage.getItem("Reset_sec1")) ? localStorage.getItem("Reset_sec1") : 180;
         }
 
         function openTab(evt, tabName) {
@@ -76,7 +76,7 @@
             padding: 0px 0px;
             border: 1px solid #ccc;
         }
-        
+
         .logcontent {
             height:15%;
             font-size:0.8em;
@@ -106,13 +106,13 @@
         <table style="display:inline-table">
             <tr class="caption1">
                 <td>Sample size:</td>
-                <td><input id="ssize" type="text" style="width: 25px;" /></td>
+                <td><input id="ssize" type="text" style="width: 35px;" /></td>
                 <td>StdDev alert:</td>
-                <td><input id="stddev_limit" type="text" style="width: 45px;" onchange="adjustWidth(this);"
+                <td><input id="stddev_limit" type="text" style="width: 25px;" onchange="adjustWidth(this);"
                         onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                 </td>
                 <td>Vol/Qty alert:</td>
-                <td><input id="qty_limit" type="text" style="width: 65px;" onchange="adjustWidth(this);"
+                <td><input id="qty_limit" type="text" style="width: 55px;" onchange="adjustWidth(this);"
                         onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                 </td>
                 <td><span id="hiddenReset">Reset</span> in (s):</td>
@@ -162,7 +162,7 @@
                     <div id="stddev"></div>
                 </td>
                 <td class="caption1">Mean:</td>
-                <td class="data1" style="width:60px">
+                <td class="data1" style="width:70px">
                     <div id="mean"></div>
                 </td>
             </tr>
@@ -172,13 +172,13 @@
         <table style="display:inline-table;">
             <tr>
                 <td>
-                    <div id="price" style="display:inline-table; width: 130px; color:yellow;">
+                    <div id="price" style="display:inline-table; width: 140px; color:yellow;">
                     </div>
                 </td>
                 <td class="caption1">
                     <div id="vQueue" style="display:inline-table"></div>Vol:
                 </td>
-                <td style="width:30px">
+                <td style="width:20px">
                     <span id="sampleQty" class="data1"></span>
                 </td>
                 <td class="caption1">QTY:</td>
@@ -216,9 +216,9 @@
     <div id="chart" style="height:65%; overflow:auto; resize:both;">
         <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container">
-            <div id="tradingview_e4a42"></div>
-            <div style="font-size:x-small;"><a href="https://www.tradingview.com/symbols/BNBUSD/?exchange=BINANCE"
-                    rel="noopener" target="_blank"><span class="blue-text">BNBUSD Chart</span></a> by TradingView</div>
+            <div id="tradingview_0579e"></div>
+            <div style="font-size:x-small;"><a href="https://www.tradingview.com/symbols/BTCUSD/?exchange=BINANCE"
+                    rel="noopener" target="_blank"><span class="blue-text">BTCUSD Chart</span></a> by TradingView</div>
             <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
             <script type="text/javascript">
                 function wrapTradingView() {
@@ -246,7 +246,7 @@
                     new TradingView.widget(
                         {
                             "autosize": true,
-                            "symbol": "BINANCE:BNBUSD",
+                            "symbol": "BINANCE:BTCUSD",
                             "interval": "1",
                             "timezone": "Asia/Hong_Kong",
                             "theme": "dark",
@@ -262,7 +262,7 @@
                             "allow_symbol_change": false,
                             "studies": studies,
                             "details": true,
-                            "container_id": "tradingview_e4a42"
+                            "container_id": "tradingview_0579e"
                         }
                     );
                 }
@@ -271,7 +271,7 @@
         <!-- TradingView Widget END -->
     </div>
     <div id="DeviationLog" class="tabcontent" style="display:block;">
-        <div id="stdDevLog" class="logcontent">Index: Mean; StdDev; minPrice,maxPrice;  Vol; DateTime</div>
+        <div id="stdDevLog" class="logcontent">Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime</div>
     </div>
     <div id="VolumeLog" class="tabcontent">
         <div id="volLog" class="logcontent">Index: Qty; Price; DateTime</div>
@@ -284,7 +284,7 @@
         <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
         <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
     </div>
-    <script>   
+    <script>     
         function k(w, x, y) {
             let a = new AudioContext();
             v = a.createOscillator();
@@ -369,7 +369,7 @@
         const CandleChart = document.getElementById("chart");
         const Provision = document.getElementById("provision");
         const DynTitle = document.getElementById("dynTitle");
-        const tvWidget = document.getElementById("tradingview_e4a42");
+        const tvWidget = document.getElementById("tradingview_0579e");
 
         const FullDateTime = "Y-m-d H:i:s.v";
         const ShortTime = "H:i:s.v";
@@ -408,10 +408,10 @@
         }
 
         function setLocStorage() {
-            localStorage.setItem("Q_len", Q_len.value);
-            localStorage.setItem("Dev_limit", Dev_limit.value);
-            localStorage.setItem("Qty_alert", Qty_alert.value);
-            localStorage.setItem("Reset_sec", Reset_sec.value);
+            localStorage.setItem("Q_len1", Q_len.value);
+            localStorage.setItem("Dev_limit1", Dev_limit.value);
+            localStorage.setItem("Qty_alert1", Qty_alert.value);
+            localStorage.setItem("Reset_sec1", Reset_sec.value);
         }
 
         function showhideChart() {
@@ -433,12 +433,16 @@
                 Provision.style.display = "inline-block";
                 Btn_GetHL.style.display = "inline-block";
                 Btn_Start.style.display = "inline-block";
+                pQueueNum.style.display = "inline-block";
+                SampleQtyNum.style.display = "inline-block";
                 Btn_s.innerHTML = "H Conf";
             }
             else {
                 Provision.style.display = "none";
                 Btn_GetHL.style.display = "none";
                 Btn_Start.style.display = "none";
+                pQueueNum.style.display = "none";
+                SampleQtyNum.style.display = "none";
                 Btn_s.innerHTML = "S Conf";
             }
         }
