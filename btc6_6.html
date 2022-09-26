@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BTC System 6.5 Boring Edition</title>
+    <title id="dynTitle">FFS BTC System 6.6 Boring Edition</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/btcusdt@trade";
@@ -82,6 +82,7 @@
             font-size:0.8em;
             overflow-y:scroll;
         }
+
         .caption1 {
             font-size: 0.6em;
         }
@@ -89,14 +90,26 @@
         .data1 {
             font-size: 0.8em;
         }
-
         .button1 {
             font-size: 0.7em;
         }
-
         .alertText {
             background-color: yellow; 
             color:black;
+        }
+
+        .container {
+            display: flex;            
+        }
+        .left-wrapper {
+            text-align: left;
+            flex: 50%;
+            background-color: black;
+            border: 0px;
+        }
+        .right-wrapper {
+            text-align: right;
+            flex: 50%;
         }
     </style>
 </head>
@@ -279,10 +292,13 @@
     <div id="WhaleLog" class="tabcontent">
         <div id="whaLog" class="logcontent">Index: Qty; Price; DateTime</div>
     </div>
-    <div class="tab">
-        <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
-        <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
-        <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
+    <div class="container">
+        <div class="tab left-wrapper">
+            <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
+            <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
+            <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
+        </div>
+        <div class="right-wrapper"><a href="./bnb6_6.html" target="_blank">BNB</a>&nbsp;&nbsp;<a href="./cake6_6.html" target="_blank">CAKE</a></div>
     </div>
     <script>     
         function k(w, x, y) {

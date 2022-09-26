@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BNB System 6.5 Boring Edition</title>
+    <title id="dynTitle">FFS BNB System 6.6 Boring Edition</title>
     <script>
         const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=binancecoin";
         const binanceWSS = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
@@ -76,12 +76,13 @@
             padding: 0px 0px;
             border: 1px solid #ccc;
         }
-        
+
         .logcontent {
-            height:15%;
-            font-size:0.8em;
-            overflow-y:scroll;
+            height: 15%;
+            font-size: 0.8em;
+            overflow-y: scroll;
         }
+
         .caption1 {
             font-size: 0.6em;
         }
@@ -89,14 +90,26 @@
         .data1 {
             font-size: 0.8em;
         }
-
         .button1 {
             font-size: 0.7em;
         }
-
         .alertText {
-            background-color: yellow; 
-            color:black;
+            background-color: yellow;
+            color: black;
+        }
+
+        .container {
+            display: flex;            
+        }
+        .left-wrapper {
+            text-align: left;
+            flex: 50%;
+            background-color: black;
+            border: 0px;
+        }
+        .right-wrapper {
+            text-align: right;
+            flex: 50%;
         }
     </style>
 </head>
@@ -131,10 +144,10 @@
                 </td>
                 <td>
                     <button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
-                    class="button1">Start</button>                    
+                        class="button1">Start</button>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get limits</button>                    
+                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get limits</button>
                 </td>
                 <td>
                     <div class="button1">
@@ -271,7 +284,7 @@
         <!-- TradingView Widget END -->
     </div>
     <div id="DeviationLog" class="tabcontent" style="display:block;">
-        <div id="stdDevLog" class="logcontent">Index: Mean; StdDev; minPrice,maxPrice;  Vol; DateTime</div>
+        <div id="stdDevLog" class="logcontent">Index: Mean; StdDev; minPrice,maxPrice; Vol; DateTime</div>
     </div>
     <div id="VolumeLog" class="tabcontent">
         <div id="volLog" class="logcontent">Index: Qty; Price; DateTime</div>
@@ -279,12 +292,15 @@
     <div id="WhaleLog" class="tabcontent">
         <div id="whaLog" class="logcontent">Index: Qty; Price; DateTime</div>
     </div>
-    <div class="tab">
-        <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
-        <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
-        <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
+    <div class="container">
+        <div class="tab left-wrapper">
+            <button class="tablinks active" onclick="openTab(event, 'DeviationLog')">Deviation</button>
+            <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
+            <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
+        </div>
+        <div class="right-wrapper"><a href="./btc6_6.html" target="_blank">BTC</a>&nbsp;&nbsp;<a href="./cake6_6.html" target="_blank">CAKE</a></div>
     </div>
-    <script>   
+    <script>
         function k(w, x, y) {
             let a = new AudioContext();
             v = a.createOscillator();
@@ -630,9 +646,9 @@
 
         function autoResizeTextbox() {
             let txtBox = document.getElementsByTagName("input");
-            for(i=0;i<txtBox.length;i++) 
-                if(txtBox[i].type=="text")
-                    adjustWidth(txtBox[i]);            
+            for (i = 0; i < txtBox.length; i++)
+                if (txtBox[i].type == "text")
+                    adjustWidth(txtBox[i]);
         }
 
         function adjustWidth(obj) {
