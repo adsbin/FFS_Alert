@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 6.7 Standard Name</title>
+    <title id="dynTitle">FFS CAKE System 6.8 Same source</title>
     <script>
-        const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
+        //const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
+        const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=CAKEUSDT&windowSize=1d";
         const binanceWSS = "wss://stream.binance.com:9443/ws/cakeusdt@trade";
         //const fontPriceMulti = 80;
 
@@ -416,11 +417,23 @@
             return await response.json();
         }
 
+        // For coingecko, replaced by binance now
+        // function get24HighLow() {
+        //     getAnyAPI(geckoapiURL).then(
+        //         data => {
+        //             UpperP.value = data[0].high_24h;
+        //             LowerP.value = data[0].low_24h;
+        //             UpperP.style.width = ((UpperP.value.length + 1) * 8) + 'px';
+        //             LowerP.style.width = ((LowerP.value.length + 1) * 8) + 'px';
+        //         }
+        //     );
+        // }
+
         function get24HighLow() {
-            getAnyAPI(geckoapiURL).then(
+            getAnyAPI(binanceapiURL).then(
                 data => {
-                    UpperP.value = data[0].high_24h;
-                    LowerP.value = data[0].low_24h;
+                    UpperP.value = parseFloat(data["highPrice"]);
+                    LowerP.value = parseFloat(data["lowPrice"]);
                     UpperP.style.width = ((UpperP.value.length + 1) * 8) + 'px';
                     LowerP.style.width = ((LowerP.value.length + 1) * 8) + 'px';
                 }
