@@ -6,7 +6,7 @@
     <title id="dynTitle">FFS BTC System 6.8 Same source</title>
     <script>
         //const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin";
-        const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=BTCUSDT&windowSize=1d";
+        const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=BTCUSDT&windowSize=";
         const binanceWSS = "wss://stream.binance.com:9443/ws/btcusdt@trade";
         //const fontPriceMulti = 15;
 
@@ -14,11 +14,13 @@
             console.log("From localStorage: Q_len:" + localStorage.getItem("Q_len1") + "; " +
                 "Dev_limit:" + localStorage.getItem("Dev_limit1") + "; " +
                 "Qty_alert:" + localStorage.getItem("Qty_alert1") + "; " +
-                "Reset_sec:" + localStorage.getItem("Reset_sec1") + ".");
+                "Reset_sec:" + localStorage.getItem("Reset_sec1") + ";" +
+                "Data_size:" + localStorage.getItem("Data_size1") + ".");
             Q_len.value = (localStorage.getItem("Q_len1")) ? localStorage.getItem("Q_len1") : 240;
             Dev_limit.value = (localStorage.getItem("Dev_limit1")) ? localStorage.getItem("Dev_limit1") : 6;
             Qty_alert.value = (localStorage.getItem("Qty_alert1")) ? localStorage.getItem("Qty_alert1") : "50/25";
             Reset_sec.value = (localStorage.getItem("Reset_sec1")) ? localStorage.getItem("Reset_sec1") : 180;
+            DataWin_size.value = (localStorage.getItem("Data_size1")) ? localStorage.getItem("Data_size1") : 1;
         }
 
         function openTab(evt, tabName) {
@@ -79,9 +81,9 @@
         }
 
         .logcontent {
-            height:15%;
-            font-size:0.8em;
-            overflow-y:scroll;
+            height: 15%;
+            font-size: 0.8em;
+            overflow-y: scroll;
         }
 
         .caption1 {
@@ -91,27 +93,32 @@
         .data1 {
             font-size: 0.8em;
         }
+
         .button1 {
             font-size: 0.7em;
         }
+
         .alertText {
-            background-color: yellow; 
-            color:black;
+            background-color: yellow;
+            color: black;
         }
 
         .container {
-            display: flex;            
+            display: flex;
         }
+
         .left-wrapper {
             text-align: left;
             flex: 50%;
             background-color: black;
             border: 0px;
         }
+
         .right-wrapper {
             text-align: right;
             flex: 50%;
         }
+
         a {
             color: white;
             font-size: 0.7em;
@@ -150,14 +157,16 @@
                 <td>
                     <div class="button1">
                         <input type="checkbox" id="cbSound" style="width:12px; height:12px;" />Sound
+                        <input id="dataWinSize" type="text" style="width: 25px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                     </div>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">Get limits</button>                    
+                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">day limits</button>
                 </td>
                 <td>
                     <button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
-                    class="button1">Start</button>                    
+                        class="button1">Start</button>
                 </td>
             </tr>
         </table>
@@ -170,7 +179,7 @@
                         onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                 </td>
                 <td class="caption1">L.Limit</td>
-                <td><input id="lowerPrice" type="text" value="" style="width: 65px;" onchange="adjustWidth(this);"
+                <td><input id="lowerPrice" type="text" value="" style="width: 55px;" onchange="adjustWidth(this);"
                         onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                 </td>
                 <td class="caption1">
@@ -303,9 +312,10 @@
             <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
             <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
         </div>
-        <div class="right-wrapper"><a href="./bnb.html" target="_blank">BNB</a>&nbsp;&nbsp;<a href="./cake.html" target="_blank">CAKE</a></div>
+        <div class="right-wrapper"><a href="./bnb.html" target="_blank">BNB</a>&nbsp;&nbsp;<a href="./cake.html"
+                target="_blank">CAKE</a></div>
     </div>
-    <script>     
+    <script>
         function k(w, x, y) {
             let a = new AudioContext();
             v = a.createOscillator();
@@ -370,6 +380,7 @@
         const Dev_limit = document.getElementById("stddev_limit");
         const Qty_alert = document.getElementById("qty_limit");
         const Reset_sec = document.getElementById("resetAlertSec");
+        const DataWin_size = document.getElementById("dataWinSize");
         const Symbol = document.getElementById("symbol");
         const Price = document.getElementById("price");
         const Qty = document.getElementById("qty");
@@ -430,7 +441,8 @@
         // }
 
         function get24HighLow() {
-            getAnyAPI(binanceapiURL).then(
+            var apiURL = binanceapiURL + DataWin_size.value + 'd';
+            getAnyAPI(apiURL).then(
                 data => {
                     UpperP.value = parseFloat(data["highPrice"]);
                     LowerP.value = parseFloat(data["lowPrice"]);
@@ -445,6 +457,7 @@
             localStorage.setItem("Dev_limit1", Dev_limit.value);
             localStorage.setItem("Qty_alert1", Qty_alert.value);
             localStorage.setItem("Reset_sec1", Reset_sec.value);
+            localStorage.setItem("Data_size1", DataWin_size.value);
         }
 
         function showhideChart() {
@@ -464,6 +477,7 @@
         function SHSettings() {
             if (Btn_s.innerHTML == "S Conf") {
                 Provision.style.display = "inline-block";
+                DataWin_size.style.display = "inline-block";
                 Btn_GetHL.style.display = "inline-block";
                 Btn_Start.style.display = "inline-block";
                 pQueueNum.style.display = "inline-table";
@@ -472,6 +486,7 @@
             }
             else {
                 Provision.style.display = "none";
+                DataWin_size.style.display = "none";
                 Btn_GetHL.style.display = "none";
                 Btn_Start.style.display = "none";
                 pQueueNum.style.display = "none";
@@ -663,9 +678,9 @@
 
         function autoResizeTextbox() {
             let txtBox = document.getElementsByTagName("input");
-            for(i=0;i<txtBox.length;i++) 
-                if(txtBox[i].type=="text")
-                    adjustWidth(txtBox[i]);            
+            for (i = 0; i < txtBox.length; i++)
+                if (txtBox[i].type == "text")
+                    adjustWidth(txtBox[i]);
         }
 
         function adjustWidth(obj) {
