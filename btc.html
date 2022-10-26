@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS BTC System 6.9 Max 7 days limits</title>
+    <title id="dynTitle">FFS BTC System 7.0</title>
     <script>
         //const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin";
         const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=BTCUSDT&windowSize=";
@@ -20,7 +20,7 @@
             Dev_limit.value = (localStorage.getItem("Dev_limit1")) ? localStorage.getItem("Dev_limit1") : 6;
             Qty_alert.value = (localStorage.getItem("Qty_alert1")) ? localStorage.getItem("Qty_alert1") : "50/25";
             Reset_sec.value = (localStorage.getItem("Reset_sec1")) ? localStorage.getItem("Reset_sec1") : 180;
-            DataWin_size.value = (localStorage.getItem("Data_size1")) ? localStorage.getItem("Data_size1") : 1;
+            DataWin_size.value = (localStorage.getItem("Data_size1")) ? localStorage.getItem("Data_size1") : 7;
         }
 
         function openTab(evt, tabName) {
@@ -131,7 +131,8 @@
         <table style="display:inline-table">
             <tr class="caption1">
                 <td>Sample size:</td>
-                <td><input id="ssize" type="text" style="width: 35px;" /></td>
+                <td><input id="ssize" type="text" style="width: 35px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td>
                 <td>StdDev alert:</td>
                 <td><input id="stddev_limit" type="text" style="width: 25px;" onchange="adjustWidth(this);"
                         onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
@@ -158,11 +159,11 @@
                     <div class="button1">
                         <input type="checkbox" id="cbSound" style="width:12px; height:12px;" />Sound
                         <input id="dataWinSize" type="text" style="width: 25px;" onchange="adjustWidth(this);"
-                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
+                            onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                     </div>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">day limits</button>
+                    <button id="btnGetHL" onclick="getHighLow();" class="button1">day limits</button>
                 </td>
                 <td>
                     <button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
@@ -440,7 +441,7 @@
         //     );
         // }
 
-        function get24HighLow() {
+        function getHighLow() {
             var apiURL = binanceapiURL + DataWin_size.value + 'd';
             getAnyAPI(apiURL).then(
                 data => {
