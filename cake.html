@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 6.9 Max 7 days limits</title>
+    <title id="dynTitle">FFS CAKE System 7.0</title>
     <script>
         //const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
         const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=CAKEUSDT&windowSize=";
@@ -20,7 +20,7 @@
             Dev_limit.value = (localStorage.getItem("Dev_limit2")) ? localStorage.getItem("Dev_limit2") : 0.003;
             Qty_alert.value = (localStorage.getItem("Qty_alert2")) ? localStorage.getItem("Qty_alert2") : "5000/2500";
             Reset_sec.value = (localStorage.getItem("Reset_sec2")) ? localStorage.getItem("Reset_sec2") : 180;
-            DataWin_size.value = (localStorage.getItem("Data_size2")) ? localStorage.getItem("Data_size2") : 1;
+            DataWin_size.value = (localStorage.getItem("Data_size2")) ? localStorage.getItem("Data_size2") : 7;
         }
 
         function openTab(evt, tabName) {
@@ -81,9 +81,9 @@
         }
 
         .logcontent {
-            height:15%;
-            font-size:0.8em;
-            overflow-y:scroll;
+            height: 15%;
+            font-size: 0.8em;
+            overflow-y: scroll;
         }
 
         .caption1 {
@@ -99,12 +99,12 @@
         }
 
         .alertText {
-            background-color: yellow; 
-            color:black;
+            background-color: yellow;
+            color: black;
         }
 
         .container {
-            display: flex;            
+            display: flex;
         }
 
         .left-wrapper {
@@ -131,7 +131,8 @@
         <table style="display:inline-table">
             <tr class="caption1">
                 <td>Sample size:</td>
-                <td><input id="ssize" type="text" style="width: 25px;" /></td>
+                <td><input id="ssize" type="text" style="width: 25px;" onchange="adjustWidth(this);"
+                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /></td>
                 <td>StdDev alert:</td>
                 <td><input id="stddev_limit" type="text" style="width: 45px;" onchange="adjustWidth(this);"
                         onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
@@ -158,15 +159,15 @@
                     <div class="button1">
                         <input type="checkbox" id="cbSound" style="width:12px; height:12px;" />Sound
                         <input id="dataWinSize" type="text" style="width: 25px;" onchange="adjustWidth(this);"
-                        onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
+                            onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" />
                     </div>
                 </td>
                 <td>
-                    <button id="btnGetHL" onclick="get24HighLow();" class="button1">day limits</button>
+                    <button id="btnGetHL" onclick="getHighLow();" class="button1">day limits</button>
                 </td>
                 <td>
                     <button id="btnStart" onclick="ws_trades();wrapTradingView(); setLocStorage(); autoResizeTextbox();"
-                    class="button1">Start</button>                    
+                        class="button1">Start</button>
                 </td>
             </tr>
         </table>
@@ -312,8 +313,8 @@
             <button class="tablinks" onclick="openTab(event, 'VolumeLog')">Volume</button>
             <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
         </div>
-        <div class="right-wrapper"><a href="./btc.html" target="_blank">BTC</a>&nbsp;&nbsp;<a href="./bnb.html" 
-            target="_blank">BNB</a></div>
+        <div class="right-wrapper"><a href="./btc.html" target="_blank">BTC</a>&nbsp;&nbsp;<a href="./bnb.html"
+                target="_blank">BNB</a></div>
     </div>
     <script>
         function k(w, x, y) {
@@ -440,7 +441,7 @@
         //     );
         // }
 
-        function get24HighLow() {
+        function getHighLow() {
             var apiURL = binanceapiURL + DataWin_size.value + 'd';
             getAnyAPI(apiURL).then(
                 data => {
@@ -678,9 +679,9 @@
 
         function autoResizeTextbox() {
             let txtBox = document.getElementsByTagName("input");
-            for(i=0;i<txtBox.length;i++) 
-                if(txtBox[i].type=="text")
-                    adjustWidth(txtBox[i]);            
+            for (i = 0; i < txtBox.length; i++)
+                if (txtBox[i].type == "text")
+                    adjustWidth(txtBox[i]);
         }
 
         function adjustWidth(obj) {
