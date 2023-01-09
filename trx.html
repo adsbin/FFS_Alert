@@ -17,7 +17,7 @@
                 "Reset_sec:" + localStorage.getItem("Reset_sec3") + ";" +
                 "Data_size:" + localStorage.getItem("Data_size3") + ".");
             Q_len.value = (localStorage.getItem("Q_len3")) ? localStorage.getItem("Q_len3") : 30;
-            Dev_limit.value = (localStorage.getItem("Dev_limit3")) ? localStorage.getItem("Dev_limit3") : 0.00003;
+            Dev_limit.value = (localStorage.getItem("Dev_limit3")) ? localStorage.getItem("Dev_limit3") : 0.0001;
             Qty_alert.value = (localStorage.getItem("Qty_alert3")) ? localStorage.getItem("Qty_alert3") : "999999/499999";
             Reset_sec.value = (localStorage.getItem("Reset_sec3")) ? localStorage.getItem("Reset_sec3") : 180;
             DataWin_size.value = (localStorage.getItem("Data_size3")) ? localStorage.getItem("Data_size3") : 7;
@@ -564,7 +564,7 @@
         function volAlert(curPrice) {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            let secDiff = (curTime - v_lastWarnTime) / 100000;
+            let secDiff = (curTime - v_lastWarnTime) / 1000;
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && v_count_warn != 0) {
@@ -592,7 +592,7 @@
         function qtyAlert(curPrice, curQty) {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            let secDiff = (curTime - w_lastWarnTime) / 100000;
+            let secDiff = (curTime - w_lastWarnTime) / 1000;
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
@@ -637,7 +637,7 @@
         function StdDevAlert() {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            let secDiff = (curTime - p_lastWarnTime) / 100000;
+            let secDiff = (curTime - p_lastWarnTime) / 1000;
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && p_count_warn != 0) {
