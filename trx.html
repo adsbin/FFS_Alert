@@ -3,24 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="dynTitle">FFS CAKE System 8.0</title>
+    <title id="dynTitle">FFS TRX System 8.0</title>
     <script>
         //const geckoapiURL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=pancakeswap-token";
-        const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=CAKEUSDT&windowSize=";
-        const binanceWSS = "wss://stream.binance.com:9443/ws/cakeusdt@trade";
+        const binanceapiURL = "https://api.binance.com/api/v3/ticker?symbol=TRXUSDT&windowSize=";
+        const binanceWSS = "wss://stream.binance.com:9443/ws/trxusdt@trade";
         //const fontPriceMulti = 80;
 
         function getLocStorage() {
-            console.log("From localStorage: Q_len:" + localStorage.getItem("Q_len2") + "; " +
-                "Dev_limit:" + localStorage.getItem("Dev_limit2") + "; " +
-                "Qty_alert:" + localStorage.getItem("Qty_alert2") + "; " +
-                "Reset_sec:" + localStorage.getItem("Reset_sec2") + ";" +
-                "Data_size:" + localStorage.getItem("Data_size2") + ".");
-            Q_len.value = (localStorage.getItem("Q_len2")) ? localStorage.getItem("Q_len2") : 20;
-            Dev_limit.value = (localStorage.getItem("Dev_limit2")) ? localStorage.getItem("Dev_limit2") : 0.003;
-            Qty_alert.value = (localStorage.getItem("Qty_alert2")) ? localStorage.getItem("Qty_alert2") : "5000/2500";
-            Reset_sec.value = (localStorage.getItem("Reset_sec2")) ? localStorage.getItem("Reset_sec2") : 180;
-            DataWin_size.value = (localStorage.getItem("Data_size2")) ? localStorage.getItem("Data_size2") : 7;
+            console.log("From localStorage: Q_len:" + localStorage.getItem("Q_len3") + "; " +
+                "Dev_limit:" + localStorage.getItem("Dev_limit3") + "; " +
+                "Qty_alert:" + localStorage.getItem("Qty_alert3") + "; " +
+                "Reset_sec:" + localStorage.getItem("Reset_sec3") + ";" +
+                "Data_size:" + localStorage.getItem("Data_size3") + ".");
+            Q_len.value = (localStorage.getItem("Q_len3")) ? localStorage.getItem("Q_len3") : 30;
+            Dev_limit.value = (localStorage.getItem("Dev_limit3")) ? localStorage.getItem("Dev_limit3") : 0.00003;
+            Qty_alert.value = (localStorage.getItem("Qty_alert3")) ? localStorage.getItem("Qty_alert3") : "999999/499999";
+            Reset_sec.value = (localStorage.getItem("Reset_sec3")) ? localStorage.getItem("Reset_sec3") : 180;
+            DataWin_size.value = (localStorage.getItem("Data_size3")) ? localStorage.getItem("Data_size3") : 7;
         }
 
         function openTab(evt, tabName) {
@@ -200,7 +200,7 @@
         <table style="display:inline-table;">
             <tr>
                 <td>
-                    <div id="price" style="display:inline-table; width: 130px; color:yellow;">
+                    <div id="price" style="display:inline-table; width: 170px; color:yellow;">
                     </div>
                 </td>
                 <td class="caption1">
@@ -244,9 +244,9 @@
     <div id="chart" style="height:65%; overflow:auto; resize:both;">
         <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container">
-            <div id="tradingview_cake"></div>
-            <div style="font-size:x-small;"><a href="https://www.tradingview.com/symbols/CAKEUSD/?exchange=BINANCE"
-                    rel="noopener" target="_blank"><span class="blue-text">CAKEUSD Chart</span></a> by TradingView</div>
+            <div id="tradingview_trx"></div>
+            <div style="font-size:x-small;"><a href="https://www.tradingview.com/symbols/TRXUSD/?exchange=BINANCE"
+                    rel="noopener" target="_blank"><span class="blue-text">TRXUSD Chart</span></a> by TradingView</div>
             <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
             <script type="text/javascript">
                 function wrapTradingView() {
@@ -274,7 +274,7 @@
                     new TradingView.widget(
                         {
                             "autosize": true,
-                            "symbol": "BINANCE:CAKEUSD",
+                            "symbol": "BINANCE:TRXUSD",
                             "interval": "1",
                             "timezone": "Asia/Hong_Kong",
                             "theme": "dark",
@@ -290,7 +290,7 @@
                             "allow_symbol_change": false,
                             "studies": studies,
                             "details": true,
-                            "container_id": "tradingview_cake"
+                            "container_id": "tradingview_trx"
                         }
                     );
                 }
@@ -314,7 +314,7 @@
             <button class="tablinks" onclick="openTab(event, 'WhaleLog')">Whale</button>
         </div>
         <div class="right-wrapper"><a href="./btc.html" target="_blank">BTC</a>&nbsp;&nbsp;<a href="./bnb.html"
-                target="_blank">BNB</a>&nbsp;&nbsp;<a href="./trx.html" target="_blank">TRX</a></div>
+                target="_blank">BNB</a>&nbsp;&nbsp;<a href="./cake.html" target="_blank">CAKE</a></div>
     </div>
     <script>
         function k(w, x, y) {
@@ -402,7 +402,7 @@
         const CandleChart = document.getElementById("chart");
         const Provision = document.getElementById("provision");
         const DynTitle = document.getElementById("dynTitle");
-        const tvWidget = document.getElementById("tradingview_cake");
+        const tvWidget = document.getElementById("tradingview_trx");
 
         const FullDateTime = "Y-m-d H:i:s.v";
         const ShortTime = "H:i:s.v";
@@ -454,11 +454,11 @@
         }
 
         function setLocStorage() {
-            localStorage.setItem("Q_len2", Q_len.value);
-            localStorage.setItem("Dev_limit2", Dev_limit.value);
-            localStorage.setItem("Qty_alert2", Qty_alert.value);
-            localStorage.setItem("Reset_sec2", Reset_sec.value);
-            localStorage.setItem("Data_size2", DataWin_size.value);
+            localStorage.setItem("Q_len3", Q_len.value);
+            localStorage.setItem("Dev_limit3", Dev_limit.value);
+            localStorage.setItem("Qty_alert3", Qty_alert.value);
+            localStorage.setItem("Reset_sec3", Reset_sec.value);
+            localStorage.setItem("Data_size3", DataWin_size.value);
         }
 
         function showhideChart() {
@@ -518,11 +518,11 @@
 
         function handle_trades(json_message) {
             let formatted_dateTime = format(json_message['E'], FullDateTime);
-            let curPrice = Math.trunc(json_message['p'] * 1000) / 1000;
-            let curQty = Math.trunc(json_message['q'] * 1000) / 1000;
+            let curPrice = Math.trunc(json_message['p'] * 100000) / 100000;
+            let curQty = Math.trunc(json_message['q'] * 100000) / 100000;
 
             cal_stddev_mean(curPrice, curQty);
-            let curDiff = Math.trunc((curPrice - curMean) * 1000) / 1000;
+            let curDiff = Math.trunc((curPrice - curMean) * 100000) / 100000;
 
             Symbol.innerHTML = json_message['s'];
             Price.innerHTML = curPrice + " : " + curDiff;
@@ -532,13 +532,13 @@
             //     else
             //         return "1em";
             // }();
-            Qty.innerHTML = curQty;
+            Qty.innerHTML = parseInt(curQty/1000) + "k";
             TStamp.innerHTML = formatted_dateTime;
             pQueueNum.innerHTML = priceQueue.length + 1;
             StdDev.innerHTML = curStdDev;
             Mean.innerHTML = curMean;
             SampleQtyNum.innerHTML = volQueue.length + 1;
-            SampleQty.innerHTML = curVol;
+            SampleQty.innerHTML = parseInt(curVol/1000) + "k";
             StdDevAlert();
             limitAlert(curPrice);
             qtyAlert(curPrice, curQty);
@@ -550,8 +550,8 @@
             priceQueue.push(curPrice);
             volQueue.push(curQty);
             if (priceQueue.length >= q_len) {
-                curStdDev = Math.trunc(standardDeviation(priceQueue) * 10000) / 10000;
-                curMean = Math.trunc(meanF(priceQueue) * 1000) / 1000;
+                curStdDev = Math.trunc(standardDeviation(priceQueue) * 1000000) / 1000000;
+                curMean = Math.trunc(meanF(priceQueue) * 1000000) / 1000000;
                 priceQueue.shift();
             }
             if (volQueue.length >= q_len) {
@@ -564,7 +564,7 @@
         function volAlert(curPrice) {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            let secDiff = (curTime - v_lastWarnTime) / 1000;
+            let secDiff = (curTime - v_lastWarnTime) / 100000;
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && v_count_warn != 0) {
@@ -592,7 +592,7 @@
         function qtyAlert(curPrice, curQty) {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            let secDiff = (curTime - w_lastWarnTime) / 1000;
+            let secDiff = (curTime - w_lastWarnTime) / 100000;
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && w_count_warn != 0) {
@@ -637,7 +637,7 @@
         function StdDevAlert() {
             let curTime = Date.now();
             let formatted_dateTime = format(curTime, ShortTime);
-            let secDiff = (curTime - p_lastWarnTime) / 1000;
+            let secDiff = (curTime - p_lastWarnTime) / 100000;
 
             if (resetAlertSec != 0) {
                 if (secDiff > resetAlertSec && p_count_warn != 0) {
